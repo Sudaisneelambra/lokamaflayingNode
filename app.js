@@ -1,10 +1,34 @@
-const express= require('express')
-const app=express()
-const userRout=require('./routes/user')
+/* eslint-disable linebreak-style */
+const express=require('express');
+const app=express();
+const userRout=require('./routes/user');
 
-app.use('/user',userRout)
+// requiring cors
+const cors = require('cors');
 
+// requiring mongoose
+const mongoose=require('mongoose');
 
-app.listen(4200,()=>{
-    console.log("server running on 4200 port");
-})
+// requiring dotenv
+require('dotenv').config();
+
+// requiring mongodb url
+const DB_URL=process.env.DB_connection;
+
+// connecting mongodb
+mongoose.connect(DB_URL);
+
+// using cors
+app.use(cors());
+
+// requiring body parser
+const bodyParser = require('body-parser');
+
+// use parser
+app.use(bodyParser.json());
+
+app.use('/user', userRout);
+
+app.listen(3000, ()=>{
+  console.log('server running on 3000 port');
+});

@@ -1,25 +1,19 @@
+
 // requiring express
-const express =require('express')
+const express =require('express');
+
 
 // using express router
-const router=express.Router()
+const router=express.Router();
 
-// requiring mongoose
-const mongoose=require('mongoose')
+// const userSignUp=require('../models/mongose/user/signup');
 
-// requiring dotenv
-require('dotenv').config()
+const {getSignup}=require('../controllers/userController/signupController');
+const {postSignup}=require('../controllers/userController/signupController');
 
-// requiring mongodb url
 
-const DB_URL=process.env.DB_connection
+router.get('/signup', getSignup);
 
-// connecting mongodb
+router.post('/signup', postSignup );
 
-mongoose.connect(DB_URL)
-
-router.get('/signup',()=>{
-console.log("sudais neelambra");
-})
-
-module.exports=router
+module.exports=router;

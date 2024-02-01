@@ -1,29 +1,39 @@
-const mongoose=require('mongoose')
+const mongoose=require('mongoose');
 
 const signupSchema=new mongoose.Schema({
-    username:{
-        type:String,
-        required:true
+  username: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  phoneNumber: {
+    type: Number,
+    required: true,
+  },
+  role: {
+    agency: {
+      type: Boolean,
+      required: true,
     },
-    email:{
-        type:String,
-        required:true
+    user: {
+      type: Boolean,
+      required: true,
     },
-    password:{
-        type:String,
-        required:true
-    },
-    isUser:{
-        type:Boolean,
-        default:
-    },
-    phoneNumber:{
-        type:Number,
-        required:true
-    },
-    role:{
-        type:String,
-        required:true
-    }
-})
+  },
+});
+
+const signup= mongoose.model('usersignups', signupSchema);
+
+module.exports=signup;
 
