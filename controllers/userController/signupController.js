@@ -8,6 +8,8 @@ const accountSid=process.env.ACCOUNTSIDTWILIO;
 const authId=process.env.AUTHTOCKENTWILIO;
 const twilio = require('twilio');
 const client = twilio(accountSid, authId);
+const bcrypt = require('bcrypt');
+const starRound = 10;
 
 
 // requiring email send from another folder
@@ -124,11 +126,14 @@ module.exports = {
           .verificationChecks.create({to: `+91${phone}`, code: otp});
 
       // if user or agency check
+
+      const hashedPassword = await bcrypt.hash(password, starRound);
+
       if (verificationCheck && verificationCheck.status==='approved' && role.user) {
         const user= new signupuser({
           username,
           email,
-          password,
+          password: hashedPassword,
           isAdmin: false,
           phoneNumber,
           verified: true,
@@ -149,7 +154,7 @@ module.exports = {
         const agency = new signupuser({
           username,
           email,
-          password,
+          password: hashedPassword,
           isAdmin: false,
           phoneNumber,
           verified: false,
