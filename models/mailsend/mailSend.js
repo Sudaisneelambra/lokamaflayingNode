@@ -2,7 +2,7 @@ require('dotenv').config();
 const password=process.env.USER_PASS;
 const nodemailer = require('nodemailer');
 
-const sendEmail = async (email, subjectSend, otp) => {
+const sendEmail = async (email, subjectSend, data) => {
   try {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -18,7 +18,7 @@ const sendEmail = async (email, subjectSend, otp) => {
       from: 'sudaisanuneelambra21@gmail.com',
       to: email,
       subject: subjectSend,
-      text: `your verification otp is ${otp}. please verify this otp`,
+      text: data,
     });
     console.log('email sent successfully');
   } catch (error) {

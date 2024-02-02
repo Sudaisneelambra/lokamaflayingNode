@@ -10,10 +10,14 @@ const router=express.Router();
 
 const {getSignup}=require('../controllers/userController/signupController');
 const {postSignup}=require('../controllers/userController/signupController');
+const {postOtpverification}=require('../controllers/userController/signupController');
 
+const sud=require('../models/middlewares/userSignup');
 
 router.get('/signup', getSignup);
 
-router.post('/signup', postSignup );
+router.post('/signup', sud, postSignup );
+router.post('/signup/otpverification', postOtpverification );
+
 
 module.exports=router;

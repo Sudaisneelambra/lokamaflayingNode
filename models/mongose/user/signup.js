@@ -21,6 +21,10 @@ const signupSchema=new mongoose.Schema({
     type: Number,
     required: true,
   },
+  verified: {
+    type: Boolean,
+    required: true,
+  },
   role: {
     agency: {
       type: Boolean,
