@@ -18,6 +18,7 @@ function man(req, res, next) {
     next();
   } else {
     res.json({message: 'fill the fields in correct formate'});
+    console.log('llll');
   }
 };
 

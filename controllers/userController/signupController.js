@@ -192,6 +192,44 @@ module.exports = {
       });
     };
   },
+  postLogin: async (req, res)=>{
+    try {
+      const {mail, pass} =req.body;
+      const mailOnly= await signupuser.findOne({
+        email: mail,
+      });
+      if (mailOnly) {
+        const passMatch = await bcrypt.compare(pass, mailOnly.password);
+        if (!passMatch) {
+          console.log('incorrect');
+          res.json({message: 'password incorrect'});
+        } else if (passMatch && mailOnly.isAdmin) {
+          console.log('admin');
+          res.json({success: true, admin: true});
+        } else if (passMatch && mailOnly.role.user) {
+          console.log('user');
+          res.json({success: true, user: true, message: 'user successfully registered'});
+        } else if (passMatch && mailOnly.role.agency && mailOnly.verified) {
+          console.log('registered agency');
+          res.json({success: true, resistered: true, message: 'registered agency'});
+        } else {
+          console.log('not registered agency');
+          emails(
+              mail,
+              'processing verification message',
+              `dear costomer ,your verification message send to the admin,but he didnt 
+              verified your mail, wait for verification`,
+          );
+          res.json({success: true, resistered: false, message: 'not registered agency'});
+        }
+      } else {
+        console.log('user not found');
+        res.json({message: 'user not found'});
+      }
+    } catch (error) {
+
+    }
+  },
 
 
 };
