@@ -1,7 +1,8 @@
-/* eslint-disable linebreak-style */
+
 const express=require('express');
 const app=express();
 const userRout=require('./routes/user');
+const agencyRoutes=require('./routes/agencyRoutes');
 
 // requiring cors
 const cors = require('cors');
@@ -28,6 +29,8 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 app.use('/user', userRout);
+app.use('/agency', agencyRoutes);
+
 
 app.listen(3000, ()=>{
   console.log('server running on 3000 port');
