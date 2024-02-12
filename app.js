@@ -4,14 +4,22 @@ const app=express();
 const userRout=require('./routes/user');
 const agencyRoutes=require('./routes/agencyRoutes');
 
+require('dotenv').config();
+
 // requiring cors
 const cors = require('cors');
 
 // requiring mongoose
 const mongoose=require('mongoose');
 
-// requiring dotenv
-require('dotenv').config();
+const session = require('express-session');
+app.use(session({
+  secret: process.env.SESSIONSECRETKEY,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {maxAge: 30 * 60 * 1000},
+}));
+
 
 // requiring mongodb url
 const DB_URL=process.env.DB_connection;

@@ -71,10 +71,10 @@ const agencySchema = new mongoose.Schema({
     type: [String], // Define file_urls as an array of strings
     required: true,
   },
-//   userId: {
-//     required: true,
-//     type: mongoose.Types.ObjectId,
-//   },
+  userId: {
+    required: true,
+    type: mongoose.Types.ObjectId,
+  },
 });
 
 const Agency = mongoose.model('Agency', agencySchema);

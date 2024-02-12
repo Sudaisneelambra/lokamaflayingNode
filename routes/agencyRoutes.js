@@ -7,6 +7,8 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const {S3Client} = require('@aws-sdk/client-s3');
 
+const tockenCheck=require('../models/middlewares/tockenckeck');
+
 const myBucket = process.env.MYBUCKET;
 
 const region = process.env.REGION;
@@ -28,6 +30,7 @@ const upload = multer({
     },
     key: function(req, file, cb) {
       console.log(file.originalname);
+      console.log(`--------${req.session.userD}--------`);
       console.log('linnn');
       cb(null, Date.now().toString() + '-' + file.originalname);
     },
@@ -36,6 +39,6 @@ const upload = multer({
 
 const {addprofile}= require('../controllers/agencyController/agencyController');
 
-router.post('/profileadd', upload.fields([{name: 'files'}, {name: 'logo'}]), addprofile);
+router.post('/profileadd', tockenCheck, upload.fields([{name: 'files'}, {name: 'logo'}]), addprofile);
 
 module.exports=router;

@@ -1,9 +1,13 @@
 const profile=require('../../models/mongose/agency/profileadd');
+const mongoose = require('mongoose');
 
 
 module.exports={
   addprofile: async (req, res, next)=>{
     try {
+      const str=req.tokens.id;
+      const objectId = new mongoose.Types.ObjectId(str);
+      console.log(objectId);
       console.log(req.body);
       const {name, description, services, contactNumber1, contactNumber2,
         aboutAgency, email, openingTime, closingTime, location}=req.body;
@@ -42,7 +46,7 @@ module.exports={
         location,
         file_urls: fileURLs,
         logo_url: logoURL,
-        // userId: ObjectId('65c0d597db9a28123102daab'),
+        userId: objectId,
       });
 
       await profileData.save();

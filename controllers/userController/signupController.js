@@ -13,6 +13,9 @@ const bcrypt = require('bcrypt');
 const starRound = 10;
 const jwt = require('jsonwebtoken');
 
+const mongoose = require('mongoose');
+const agency=require('../../models/mongose/agency/profileadd');
+
 
 // requiring email send from another folder
 const emails = require('../../models/mailsend/mailSend');
@@ -27,7 +30,13 @@ module.exports = {
   postSignup: async (req, res) => {
     try {
       const data = req.body;
-      const {username, email, password, phoneNumber, role} = req.body;
+      const {
+        username,
+        email,
+        password,
+        phoneNumber,
+        role,
+      } = req.body;
 
       if (!username&&!email&&!password&&!phoneNumber) {
         res.status(400).json({
@@ -120,7 +129,14 @@ module.exports = {
 
   postOtpverification: async (req, res)=>{
     try {
-      const {otp, username, email, password, phoneNumber, role}=req.body;
+      const {
+        otp,
+        username,
+        email,
+        password,
+        phoneNumber,
+        role,
+      }=req.body;
       const phone=+phoneNumber;
 
       // verification check
@@ -146,7 +162,14 @@ module.exports = {
         });
 
         await user.save();
-        const token = jwt.sign({id: mailOnly.id, username: mailOnly.username}, secretKey, {expiresIn: '1h'});
+        const token = jwt.sign({
+          id: mailOnly.id,
+          username: mailOnly.username,
+        },
+        secretKey,
+        {
+          expiresIn: '1h',
+        });
 
         res.json({
           success: true,
@@ -198,30 +221,82 @@ module.exports = {
   },
   postLogin: async (req, res)=>{
     try {
-      const {mail, pass} =req.body;
+      const {
+        mail,
+        pass,
+      } =req.body;
+
       const mailOnly= await signupuser.findOne({
         email: mail,
       });
+      const sin= mailOnly._id;
       if (mailOnly) {
         const passMatch = await bcrypt.compare(pass, mailOnly.password);
+
         if (!passMatch) {
           console.log('incorrect');
-          res.json({message: 'password incorrect'});
+          res.json({
+            message: 'password incorrect',
+          });
         } else {
           console.log(mailOnly);
-          const token = jwt.sign({id: mailOnly.id, username: mailOnly.username}, secretKey, {expiresIn: '1h'});
+          const token = jwt.sign({
+            id: mailOnly._id,
+            username: mailOnly.username,
+            verified: mailOnly.verified,
+          },
+          secretKey,
+          {
+            expiresIn: '1h',
+          });
+
           if (passMatch && mailOnly.isAdmin) {
             console.log('admin');
-            res.json({success: true, admin: true, token});
+            res.json({
+              success: true,
+              admin: true,
+              token,
+              type: 'admin',
+            });
             console.log(token);
           } else if (passMatch && mailOnly.role.user) {
             console.log('user');
-            res.json({success: true, user: true, message: 'user successfully registered', token});
+            res.json({
+              success: true,
+              user: true,
+              message: 'user successfully registered',
+              token,
+              type: 'user',
+            });
             console.log(token);
           } else if (passMatch && mailOnly.role.agency && mailOnly.verified) {
             console.log('registered agency');
-            res.json({success: true, resistered: true, message: 'registered agency', token});
-            console.log(token);
+
+            const already= await signupuser.aggregate([{$match: {_id: new mongoose.Types.ObjectId(sin)}},
+              {$lookup: {from: 'agencies',
+                localField: '_id', foreignField: 'userId', as: 'agencyfulldetails'}}]);
+            console.log(already);
+
+            if (already.length > 0 && already[0].agencyfulldetails.length > 0) {
+              res.json({
+                success: true,
+                resistered: true,
+                message: 'registered agency',
+                token,
+                profileadd: true,
+                type: 'agency',
+              });
+              console.log(token);
+            } else {
+              res.json({
+                success: true,
+                resistered: true,
+                message: 'registered agency',
+                token,
+                profileadd: false,
+                type: 'agency',
+              });
+            }
           } else {
             console.log('not registered agency');
             emails(
@@ -240,6 +315,18 @@ module.exports = {
     } catch (error) {
       console.log(error);
     }
+  },
+
+  logout: (req, res)=>{
+    req.session.destroy((err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({message: 'Error destroying session'});
+      } else {
+        console.log('distroyd');
+        res.json({message: 'Logged out successfully'});
+      }
+    });
   },
 
 
