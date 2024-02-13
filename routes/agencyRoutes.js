@@ -1,44 +1,20 @@
 const express =require('express');
 const router=express.Router();
 
-
-require('dotenv').config();
-const multer = require('multer');
-const multerS3 = require('multer-s3');
-const {S3Client} = require('@aws-sdk/client-s3');
-
 const tockenCheck=require('../models/middlewares/tockenckeck');
 
-const myBucket = process.env.MYBUCKET;
-
-const region = process.env.REGION;
-
-const s3Client = new S3Client({
-  region,
-  credentials: {
-    accessKeyId: process.env.ACCESSKEYID,
-    secretAccessKey: process.env.SECRETACCESSKEY,
-  },
-});
-
-const upload = multer({
-  storage: multerS3({
-    s3: s3Client,
-    bucket: myBucket,
-    metadata: function(req, file, cb) {
-      cb(null, {fieldName: file.originalname});
-    },
-    key: function(req, file, cb) {
-      console.log(file.originalname);
-      console.log(`--------${req.session.userD}--------`);
-      console.log('linnn');
-      cb(null, Date.now().toString() + '-' + file.originalname);
-    },
-  }),
-});
+const upload =require('../models/multer/profileadd');
+const uploads =require('../models/multer/placeadd');
+const already =require('../models/middlewares/placeused');
 
 const {addprofile}= require('../controllers/agencyController/agencyController');
+const {gettingprofile} = require('../controllers/agencyController/agencyController');
+const {addplace} =require('../controllers/agencyController/agencyController');
+
+router.get('/profileget', tockenCheck, gettingprofile);
 
 router.post('/profileadd', tockenCheck, upload.fields([{name: 'files'}, {name: 'logo'}]), addprofile);
+router.post('/placeadd', tockenCheck, already, uploads.array('images', 5), addplace);
+
 
 module.exports=router;

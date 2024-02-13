@@ -105,9 +105,10 @@ module.exports = {
                 .catch((err)=>{
                   res.json({
                     otpsend: false,
-                    message: 'otp send filed',
+                    message: `otp send filed : ${err}`,
                   });
                   console.log('otp send aayilla');
+                  console.log(err);
                 });
             emails(email, 'otp verification mail', `your verification otp is ${otp}. please verify this otp`);
             // .then((msg)=>{
