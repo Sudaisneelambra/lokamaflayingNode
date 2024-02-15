@@ -1,5 +1,6 @@
 const profile=require('../../models/mongose/agency/profileadd');
 const place =require('../../models/mongose/agency/placeadd');
+const guide =require('../../models/mongose/agency/guidadd');
 const mongoose = require('mongoose');
 
 
@@ -114,6 +115,57 @@ module.exports={
       });
 
       await newPlace.save();
+
+      console.log('File uploaded:', req.file);
+      res.send({
+        data: req.file,
+        success: true,
+        msg: 'Successfully uploaded file',
+      });
+    } catch (err) {
+      console.error('Error uploading file:', err);
+      res.status(500).send({error: 'Error uploading file'});
+    }
+  },
+  addguide: async (req, res)=>{
+    try {
+      const str = req.tokens.id;
+      console.log('sudaiiiiiiiiiiiiiiiiiiiiis');
+      const objectId = new mongoose.Types.ObjectId(str);
+      const {
+        guidename,
+        aboutguide,
+        experience,
+      } = req.body;
+
+      // Declare fileURLs variable
+      let fileURL = '';
+
+      // Fetch user profile
+      const prof = await profile.findOne({
+        userId: objectId,
+      });
+      console.log(prof);
+      const sin = prof._id;
+      console.log(sin);
+
+      console.log(req.file);
+      // If there are uploaded files, extract their URLs
+      if (req.file && req.file.location) {
+        fileURL = req.file.location; // Assign the file location to fileURL
+        console.log(fileURL);
+      }
+
+      // Update or insert place data
+      const newguide = new guide({
+        guidename,
+        aboutguide,
+        experience,
+        guideurl: fileURL,
+        agencyid: sin,
+      });
+
+      await newguide.save();
 
       console.log('File uploaded:', req.file);
       res.send({

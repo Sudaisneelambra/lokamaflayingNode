@@ -24,9 +24,12 @@ const uploads = multer({
     },
     key: function(req, file, cb) {
       console.log(file.originalname);
+      console.log('nabatti');
       cb(null, Date.now().toString() + '-' + file.originalname);
     },
   }),
 });
 
-module.exports=uploads;
+module.exports={uploads, s3Client};
+
+
