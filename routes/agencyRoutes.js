@@ -8,13 +8,18 @@ const {uploads} =require('../models/multer/placeadd');
 const already =require('../models/middlewares/placeused');
 const guidealredayused =require('../models/middlewares/guideused');
 
-const {addprofile}= require('../controllers/agencyController/agencyController');
 const {gettingprofile} = require('../controllers/agencyController/agencyController');
+const {gettingplace} =require('../controllers/agencyController/agencyController');
+const {gettingguide} =require('../controllers/agencyController/agencyController');
+const {addprofile}= require('../controllers/agencyController/agencyController');
 const {addplace} =require('../controllers/agencyController/agencyController');
 const {addguide} =require('../controllers/agencyController/agencyController');
 
 
 router.get('/profileget', tockenCheck, gettingprofile);
+router.get('/getplace', tockenCheck, gettingplace);
+router.get('/getguide', tockenCheck, gettingguide);
+
 
 router.post('/profileadd', tockenCheck, upload.fields([{name: 'files'}, {name: 'logo'}]), addprofile);
 router.post('/placeadd', tockenCheck, uploads.array('images', 5), already, addplace);

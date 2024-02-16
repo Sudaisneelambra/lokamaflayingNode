@@ -5,6 +5,60 @@ const mongoose = require('mongoose');
 
 
 module.exports={
+  gettingprofile: async (req, res)=>{
+    try {
+      const id=req.tokens.id;
+      const userId= new mongoose.Types.ObjectId(id);
+      const user= await profile.findOne({
+        userId: userId,
+      });
+      res.json({user});
+    } catch (err) {
+      res.json(`error occured ${err}`);
+    }
+  },
+  gettingplace: async (req, res)=>{
+    try {
+      const id= new mongoose.Types.ObjectId(req.tokens.id);
+      const prof= await profile.findOne({userId: id});
+      const plac= await place.find({agencyid: prof._id});
+      if (plac) {
+        res.json({
+          success: true,
+          message: 'all place data getted',
+          data: plac,
+        });
+      } else {
+        res.json({
+          message: 'getting profile failed',
+        });
+      }
+    } catch (err) {
+      console.log(`error is : ${err}`);
+      res.json({message: err});
+    }
+  },
+  gettingguide: async (req, res)=>{
+    try {
+      const id= new mongoose.Types.ObjectId(req.tokens.id);
+      const prof= await profile.findOne({userId: id});
+      const guid= await guide.find({agencyid: prof._id});
+      if (guid) {
+        res.json({
+          success: true,
+          message: 'all guide data getted',
+          data: guid,
+        });
+      } else {
+        res.json({
+          message: 'getting guide failed',
+        });
+      }
+    } catch (err) {
+      console.log(`error is : ${err}`);
+      res.json({message: err});
+    }
+  },
   addprofile: async (req, res, next)=>{
     try {
       const str=req.tokens.id;
@@ -20,7 +74,7 @@ module.exports={
       let logoURL = '';
       if (req.files['logo'] && req.files['logo'][0]) {
         logoURL = req.files['logo'][0].location;
-      }
+      };
 
       await profile.updateOne(
           {userId: objectId},
@@ -56,19 +110,6 @@ module.exports={
     } catch (error) {
       console.error('Error uploading file:', error);
       res.status(500).send({error: 'Error uploading file'});
-    }
-  },
-  gettingprofile: async (req, res)=>{
-    try {
-      const id=req.tokens.id;
-      const userId= new mongoose.Types.ObjectId(id);
-      console.log(userId);
-      const user= await profile.findOne({
-        userId: new mongoose.Types.ObjectId(id),
-      });
-      res.json({user});
-    } catch (err) {
-      res.json(`error occured ${err}`);
     }
   },
   addplace: async (req, res) => {
@@ -120,7 +161,7 @@ module.exports={
       res.send({
         data: req.file,
         success: true,
-        msg: 'Successfully uploaded file',
+        message: 'Successfully uploaded place',
       });
     } catch (err) {
       console.error('Error uploading file:', err);
