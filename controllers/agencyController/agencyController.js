@@ -59,6 +59,33 @@ module.exports={
       res.json({message: err});
     }
   },
+  gettingsingleplace: async (req, res)=>{
+    try {
+      const id= new mongoose.Types.ObjectId(req.params.id);
+      const singleplace = await place.findOne({_id: id});
+      res.json({success: true, data: singleplace, message: 'successfully get the place data'});
+    } catch (error) {
+      res.json({message: 'failed on getting place data', error: error});
+    }
+  },
+  gettingsingleguide: async (req, res)=>{
+    try {
+      const id= new mongoose.Types.ObjectId(req.params.id);
+      const singleguide = await guide.findOne({_id: id});
+      res.json({success: true, data: singleguide, message: 'successfully get the guide data'});
+    } catch (error) {
+      res.json({message: 'failed on getting guid data', error: error});
+    }
+  },
+  deletingPlace: async (req, res)=>{
+    try {
+      const id= new mongoose.Types.ObjectId(req.params.id);
+      const deletedPlace = await place.findByIdAndDelete({_id: id});
+      res.json({success: true, message: 'place deleted successfully', place: deletedPlace});
+    } catch (error) {
+      res.json({message: 'failed on deleting place data', error: error});
+    }
+  },
   addprofile: async (req, res, next)=>{
     try {
       const str=req.tokens.id;
