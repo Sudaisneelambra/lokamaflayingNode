@@ -9,9 +9,7 @@ module.exports={
     try {
       const id=req.tokens.id;
       const userId= new mongoose.Types.ObjectId(id);
-      const user= await profile.findOne({
-        userId: userId,
-      });
+      const user = await profile.findOne({userId: userId}).select('name');
       res.json({user});
     } catch (err) {
       res.json(`error occured ${err}`);
@@ -21,7 +19,7 @@ module.exports={
     try {
       const id= new mongoose.Types.ObjectId(req.tokens.id);
       const prof= await profile.findOne({userId: id});
-      const plac= await place.find({agencyid: prof._id});
+      const plac = await place.find({agencyid: prof._id}).select('_id placeName placeDescription placeurl');
       if (plac) {
         res.json({
           success: true,
@@ -29,20 +27,20 @@ module.exports={
           data: plac,
         });
       } else {
-        res.json({
+        res.status(404).json({
           message: 'getting profile failed',
         });
       }
     } catch (err) {
       console.log(`error is : ${err}`);
-      res.json({message: err});
+      res.status(404).json({message: err});
     }
   },
   gettingguide: async (req, res)=>{
     try {
       const id= new mongoose.Types.ObjectId(req.tokens.id);
       const prof= await profile.findOne({userId: id});
-      const guid= await guide.find({agencyid: prof._id});
+      const guid = await guide.find({agencyid: prof._id}).select('guidename aboutguide guideurl');
       if (guid) {
         res.json({
           success: true,
@@ -61,11 +59,25 @@ module.exports={
   },
   gettingsingleplace: async (req, res)=>{
     try {
+      console.log('suda');
+      console.log(req.params.id);
       const id= new mongoose.Types.ObjectId(req.params.id);
+      console.log(id);
       const singleplace = await place.findOne({_id: id});
-      res.json({success: true, data: singleplace, message: 'successfully get the place data'});
+      console.log(singleplace);
+      if (singleplace) {
+        console.log(singleplace);
+        console.log('no issue');
+        res.json({success: true, data: singleplace, message: 'successfully get the place data'});
+      } else {
+        console.log(singleplace);
+        console.log('issue');
+        res.status(404).json({message: 'failed on getting place data'});
+      }
     } catch (error) {
-      res.json({message: 'failed on getting place data', error: error});
+      console.log(error);
+      console.log('errorr occur');
+      res.status(404).json({message: 'failed on getting place data', error: error});
     }
   },
   gettingsingleguide: async (req, res)=>{
