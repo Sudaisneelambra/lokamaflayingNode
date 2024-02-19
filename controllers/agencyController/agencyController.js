@@ -1,15 +1,26 @@
 const profile=require('../../models/mongose/agency/profileadd');
 const place =require('../../models/mongose/agency/placeadd');
 const guide =require('../../models/mongose/agency/guidadd');
+const package =require('../../models/mongose/agency/package');
 const mongoose = require('mongoose');
 
 
 module.exports={
-  gettingprofile: async (req, res)=>{
+  gettingprofilename: async (req, res)=>{
     try {
       const id=req.tokens.id;
       const userId= new mongoose.Types.ObjectId(id);
       const user = await profile.findOne({userId: userId}).select('name');
+      res.json({user});
+    } catch (err) {
+      res.json(`error occured ${err}`);
+    }
+  },
+  profileget: async (req, res)=> {
+    try {
+      const id=req.tokens.id;
+      const userId= new mongoose.Types.ObjectId(id);
+      const user = await profile.findOne({userId: userId});
       res.json({user});
     } catch (err) {
       res.json(`error occured ${err}`);
@@ -89,6 +100,93 @@ module.exports={
       res.json({message: 'failed on getting guid data', error: error});
     }
   },
+  editplace: async (req, res)=>{
+    try {
+      console.log(req.body);
+      const placeid= new mongoose.Types.ObjectId(req.body.id);
+      const objectId = new mongoose.Types.ObjectId(req.tokens.id);
+      const {
+        placeName,
+        placeDescription,
+        openingTime,
+        closingTime,
+        entryFee,
+        location,
+      } = req.body;
+
+      // Declare fileURLs variable
+      let fileURLs = [];
+      if (req.files) {
+        fileURLs = req.files.map((file)=> file.location);
+      }
+      const prof = await profile.findOne({
+        userId: objectId,
+      });
+      const sin = prof._id;
+      const updated= await place.updateOne({_id: placeid}, {
+        $set: {
+          placeName,
+          placeDescription,
+          openingTime,
+          closingTime,
+          entryFee,
+          location,
+          placeurl: fileURLs,
+          agencyid: sin,
+        }});
+      console.log('File uploaded:', req.file);
+      console.log(updated);
+      res.send({
+        data: req.file,
+        success: true,
+        message: 'Successfully updated place',
+      });
+    } catch (err) {
+      console.error('Error uploading file:', err);
+      res.status(500).send({error: 'Error uploading file'});
+    }
+  },
+  editguide: async (req, res) =>{
+    try {
+      console.log(req.body);
+      const placeid= new mongoose.Types.ObjectId(req.body.id);
+      const objectId = new mongoose.Types.ObjectId(req.tokens.id);
+      const {
+        guidename,
+        aboutguide,
+        experience,
+      } = req.body;
+
+      console.log(req.file);
+      // If there are uploaded files, extract their URLs
+      if (req.file && req.file.location) {
+        fileURL = req.file.location; // Assign the file location to fileURL
+        console.log(fileURL);
+      }
+      const prof = await profile.findOne({
+        userId: objectId,
+      });
+      const sin = prof._id;
+      const updated= await guide.updateOne({_id: placeid}, {
+        $set: {
+          guidename,
+          aboutguide,
+          experience,
+          guideurl: fileURL,
+          agencyid: sin,
+        }});
+      console.log('File uploaded:', req.file);
+      console.log(updated);
+      res.send({
+        data: req.file,
+        success: true,
+        message: 'Successfully updated guide',
+      });
+    } catch (err) {
+      console.error('Error uploading file:', err);
+      res.status(500).send({error: 'Error uploading file'});
+    }
+  },
   deletingPlace: async (req, res)=>{
     try {
       const id= new mongoose.Types.ObjectId(req.params.id);
@@ -96,6 +194,15 @@ module.exports={
       res.json({success: true, message: 'place deleted successfully', place: deletedPlace});
     } catch (error) {
       res.json({message: 'failed on deleting place data', error: error});
+    }
+  },
+  deleteguide: async (req, res) =>{
+    try {
+      const id= new mongoose.Types.ObjectId(req.params.id);
+      const deletedguide = await guide.findByIdAndDelete({_id: id});
+      res.json({success: true, message: 'guide deleted successfully', guide: deletedguide});
+    } catch (error) {
+      res.json({message: 'failed on deleting guide data', error: error});
     }
   },
   addprofile: async (req, res, next)=>{
@@ -154,7 +261,6 @@ module.exports={
   addplace: async (req, res) => {
     try {
       const str = req.tokens.id;
-      console.log('sudaiiiiiiiiiiiiiiiiiiiiis');
       const objectId = new mongoose.Types.ObjectId(str);
       const {
         placeName,
@@ -256,6 +362,56 @@ module.exports={
     } catch (err) {
       console.error('Error uploading file:', err);
       res.status(500).send({error: 'Error uploading file'});
+    }
+  },
+  packageadd: async (req, res)=>{
+    try {
+      const {mainform, places, guid} = req.body;
+      const {packageName, aboutPackage, packagePrice, fecilities,
+        startDate, endDate, offer, offerRate, maximumCapacity,
+        availableSlot}=mainform;
+      console.log(fecilities);
+      // const parsedfecility = JSON.parse(fecilities);
+      console.log(places);
+      console.log(guid);
+      const str = new mongoose.Types.ObjectId(req.tokens.id);
+      console.log(str);
+      const prof= await profile.findOne({userId: str});
+      console.log(prof);
+      console.log(prof._id);
+      const newpackage= new package({
+        packageName,
+        aboutPackage,
+        packagePrice,
+        services: {
+          Transportation: fecilities.Transportation,
+          Accommodation: fecilities.Accommodation,
+          Meals: fecilities.Meals,
+          ProfessionalGuides: fecilities.ProfessionalGuides,
+          ProfessionalGuides: fecilities.LanguageSupport,
+          TravelInsurance: fecilities.TravelInsurance,
+          CustomerSupport: fecilities.CustomerSupport,
+        },
+        startDate,
+        endDate,
+        offer,
+        offerRate,
+        maximumCapacity,
+        availableSlot,
+        places: places,
+        guid: guid,
+        agencyid: prof._id,
+      });
+
+      const added= await newpackage.save();
+      if (added) {
+        res.json({success: true, message: 'package added succes fully'});
+      } else {
+        res.status(404).json({success: false, message: 'package added failed'});
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(404).json({message: `failed to add package and error is : ${error}`});
     }
   },
 };
