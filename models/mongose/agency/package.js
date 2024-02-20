@@ -76,8 +76,9 @@ const packageschema = new mongoose.Schema({
   places: {
     type: [{
       placeid: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true,
+        ref: 'places',
       },
       placename: {
         type: String,
@@ -99,6 +100,7 @@ const packageschema = new mongoose.Schema({
       id: {
         type: mongoose.Types.ObjectId,
         required: true,
+        ref: 'guides',
       },
       name: {
         type: String,
@@ -110,6 +112,7 @@ const packageschema = new mongoose.Schema({
   agencyid: {
     type: mongoose.Types.ObjectId,
     required: true,
+    ref: 'Agency',
   },
 });
 

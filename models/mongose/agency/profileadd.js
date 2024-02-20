@@ -74,6 +74,7 @@ const agencySchema = new mongoose.Schema({
   userId: {
     required: true,
     type: mongoose.Types.ObjectId,
+    ref: 'usersignups',
   },
 });
 

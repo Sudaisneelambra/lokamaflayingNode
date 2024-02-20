@@ -19,6 +19,7 @@ const guidschema = new mongoose.Schema({
   agencyid: {
     type: mongoose.Types.ObjectId,
     required: true,
+    ref: 'Agency',
   },
 });
 

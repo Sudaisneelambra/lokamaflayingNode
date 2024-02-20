@@ -68,6 +68,58 @@ module.exports={
       res.json({message: err});
     }
   },
+  gettingpackage: async (req, res) =>{
+    try {
+      const id= new mongoose.Types.ObjectId(req.tokens.id);
+      const prof= await profile.findOne({userId: id});
+      // const pack = await package.find({agencyid: prof._id});
+      const look = await package.aggregate([{$match: {agencyid: prof._id}}, {$lookup: {from: 'places',
+        localField: 'places.placeid', foreignField: '_id', as: 'placefulldetails'}}]);
+      if (look) {
+        res.json({
+          success: true,
+          message: 'all package data getted',
+          data: look,
+        });
+      } else {
+        res.json({
+          message: 'getting package failed',
+        });
+      }
+    } catch (err) {
+      console.log(`error is : ${err}`);
+      res.json({message: err});
+    }
+  },
+  getsinglepackage: async (req, res)=>{
+    try {
+      console.log(req.params.id);
+      const packageid= new mongoose.Types.ObjectId(req.params.id);
+      const pack= await package.findOne({_id: packageid});
+      if (pack) {
+        const placeIds = pack.places.map((place) => place.placeid);
+
+        // Assuming you have a Place model
+        const places = await place.find({_id: {$in: placeIds}});
+
+        console.log(places);
+
+        res.json({
+          success: true,
+          message: 'all package data getted',
+          package: pack,
+          place: places,
+        });
+      } else {
+        res.json({
+          message: 'getting package failed',
+        });
+      }
+    } catch (err) {
+      console.log(`error is : ${err}`);
+      res.json({message: err});
+    }
+  },
   gettingsingleplace: async (req, res)=>{
     try {
       console.log('suda');
@@ -370,20 +422,33 @@ module.exports={
       const {packageName, aboutPackage, packagePrice, fecilities,
         startDate, endDate, offer, offerRate, maximumCapacity,
         availableSlot}=mainform;
-      console.log(fecilities);
-      // const parsedfecility = JSON.parse(fecilities);
-      console.log(places);
-      console.log(guid);
       const str = new mongoose.Types.ObjectId(req.tokens.id);
-      console.log(str);
       const prof= await profile.findOne({userId: str});
-      console.log(prof);
-      console.log(prof._id);
+      console.log(mainform);
+
+      const newPlaces = places.map((place) => ({
+        placeid: new mongoose.Types.ObjectId(place.placeId),
+        placename: place.placename,
+        arrivalDate: place.arrivalDate,
+        arrivingtime: place.arrivingtime,
+        returnDate: place.returnDate,
+        returntime: place.returntime,
+      }));
+
+      const newguides = guid.map((guide) => ({
+        id: new mongoose.Types.ObjectId(guide.id),
+        name: guide.name,
+      }));
+
+      console.log('-------------------------------------------');
+      console.log(fecilities);
+      console.log('-------------------------------------------');
+
       const newpackage= new package({
         packageName,
         aboutPackage,
         packagePrice,
-        services: {
+        fecilities: {
           Transportation: fecilities.Transportation,
           Accommodation: fecilities.Accommodation,
           Meals: fecilities.Meals,
@@ -398,11 +463,12 @@ module.exports={
         offerRate,
         maximumCapacity,
         availableSlot,
-        places: places,
-        guid: guid,
+        places: newPlaces,
+        guid: newguides,
         agencyid: prof._id,
       });
 
+      console.log(newpackage);
       const added= await newpackage.save();
       if (added) {
         res.json({success: true, message: 'package added succes fully'});

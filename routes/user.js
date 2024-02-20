@@ -12,7 +12,7 @@ const tockenCheck=require('../models/middlewares/tockenckeck');
 
 const {getSignup}=require('../controllers/userController/signupController');
 const {postSignup}=require('../controllers/userController/signupController');
-const {postOtpverification}=require('../controllers/userController/signupController');
+const {postOtpverification} = require('../controllers/userController/signupController');
 const {postLogin}=require('../controllers/userController/signupController');
 const {logout}=require('../controllers/userController/signupController');
 
@@ -24,7 +24,7 @@ router.get('/signup', getSignup);
 
 router.post('/signup', sud, tockenCheck, postSignup );
 router.post('/signup/otpverification', tockenCheck, postOtpverification );
-router.post('/login', tockenCheck, postLogin);
+router.post('/login', postLogin);
 router.get('/logout', tockenCheck, logout);
 
 module.exports=router;
