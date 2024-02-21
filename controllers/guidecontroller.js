@@ -35,7 +35,7 @@ module.exports={
   },
   editguide: async (req, res) =>{
     try {
-      const placeid= new mongoose.Types.ObjectId(req.body.id);
+      const guideid= new mongoose.Types.ObjectId(req.body.id);
       const objectId = new mongoose.Types.ObjectId(req.tokens.id);
       const {
         guidename,
@@ -50,7 +50,7 @@ module.exports={
         userId: objectId,
       });
       const sin = prof._id;
-      const updated= await guide.updateOne({_id: placeid}, {
+      const updated= await guide.updateOne({_id: guideid}, {
         $set: {
           guidename,
           aboutguide,

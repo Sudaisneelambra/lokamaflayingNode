@@ -32,6 +32,9 @@ const {addprofile}= require('../controllers/agencyprofilecontroller');
 const {gettingpackage} =require('../controllers/packagecontroller');
 const {packageadd} =require('../controllers/packagecontroller');
 const {getsinglepackage} =require('../controllers/packagecontroller');
+const {deletepackage} =require('../controllers/packagecontroller');
+const {editpackage} =require('../controllers/packagecontroller');
+
 
 // profile
 router.get('/profilenameget', tockenCheck, gettingprofilename);
@@ -42,6 +45,9 @@ router.post('/profileadd', tockenCheck, upload.fields([{name: 'files'}, {name: '
 router.get('/getpackage', tockenCheck, gettingpackage);
 router.post('/packageadd', tockenCheck, packageadd);
 router.get('/getsinglepackage/:id', tockenCheck, getsinglepackage);
+router.delete('/deletepackage/:id', tockenCheck, deletepackage);
+router.put('/editpackage', tockenCheck, editpackage);
+
 
 // place
 router.get('/getplace', tockenCheck, gettingplace);
