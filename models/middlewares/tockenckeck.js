@@ -6,7 +6,6 @@ const checkTocken=(req, res, next)=>{
   const authorizationHeader = req.headers['authorization'];
   jwt.verify(authorizationHeader, secretKey, (err, decoded) => {
     if (err) {
-      console.log('Token verification failed:', err.message);
       res.json({message: `verification fialed due to  ${err.message}`, expiry: err.message});
     } else {
       // Token is verified successfully
@@ -16,7 +15,6 @@ const checkTocken=(req, res, next)=>{
       if (expirationTime < currentTime) {
         console.log('Authorization header has expired');
       } else {
-        console.log('Authorization header is still valid');
         req.tokens= decoded;
         next();
       }

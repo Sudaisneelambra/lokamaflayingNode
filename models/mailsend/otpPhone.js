@@ -8,8 +8,6 @@ const twilio =require('twilio');
 const client=twilio(accountSid, authId);
 
 const otpgenerate=async function(phone) {
-  console.log('sudais');
-  console.log(phone);
   verification = await client.verify.v2.services(`${serviceSid}`)
       .verifications.create({to: `${countryCode}${phone}`, channel: 'sms'});
 };

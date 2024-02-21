@@ -10,15 +10,10 @@ function man(req, res, next) {
   const validpass = pPattern.test(password);
   const validuser = uPattern.test(username);
   const validemail = ePattern.test(email);
-  console.log(validpass);
-  console.log(validuser);
-  console.log(validemail);
-  console.log(req.body);
   if (validpass && validuser && validemail) {
     next();
   } else {
     res.json({message: 'fill the fields in correct formate'});
-    console.log('llll');
   }
 };
 

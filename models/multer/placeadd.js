@@ -23,8 +23,6 @@ const uploads = multer({
       cb(null, {fieldName: file.originalname});
     },
     key: function(req, file, cb) {
-      console.log(file.originalname);
-      console.log('nabatti');
       cb(null, Date.now().toString() + '-' + file.originalname);
     },
   }),

@@ -10,11 +10,11 @@ const router=express.Router();
 
 const tockenCheck=require('../models/middlewares/tockenckeck');
 
-const {getSignup}=require('../controllers/userController/signupController');
-const {postSignup}=require('../controllers/userController/signupController');
-const {postOtpverification} = require('../controllers/userController/signupController');
-const {postLogin}=require('../controllers/userController/signupController');
-const {logout}=require('../controllers/userController/signupController');
+const {getSignup}=require('../controllers/signupcontroller');
+const {postSignup}=require('../controllers/signupcontroller');
+const {postOtpverification} = require('../controllers/signupcontroller');
+const {postLogin}=require('../controllers/signupcontroller');
+const {logout}=require('../controllers/signupcontroller');
 
 
 const sud=require('../models/middlewares/userSignup');

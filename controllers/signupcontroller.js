@@ -14,18 +14,17 @@ const starRound = 10;
 const jwt = require('jsonwebtoken');
 
 const mongoose = require('mongoose');
-const agency=require('../../models/mongose/agency/profileadd');
+const agency=require('../models/mongose/agency/profileadd');
 
 
 // requiring email send from another folder
-const emails = require('../../models/mailsend/mailSend');
-const otpSend = require('../../models/mailsend/otpPhone');
+const emails = require('../models/mailsend/mailSend');
+const otpSend = require('../models/mailsend/otpPhone');
 
-const signupuser=require('../../models/mongose/user/signup');
+const signupuser=require('../models/mongose/user/signup');
 
 module.exports = {
   getSignup: () => {
-    console.log('sudais neelambra');
   },
   postSignup: async (req, res) => {
     try {
@@ -100,24 +99,19 @@ module.exports = {
                     otpsend: true,
                     message: 'otp send successfully',
                   });
-                  console.log('otp send aayi');
                 })
                 .catch((err)=>{
                   res.json({
                     otpsend: false,
                     message: `otp send filed : ${err}`,
                   });
-                  console.log('otp send aayilla');
-                  console.log(err);
                 });
             emails(email, 'otp verification mail', `your verification otp is ${otp}. please verify this otp`);
             // .then((msg)=>{
             //   res.json({otpsend: true, message: 'otp send successfully'});
-            //   console.log('otp send aayi');
             // })
             // .catch((err)=>{
             //   res.json({otpsend: false, message: 'otp send filed'});
-            //   console.log('otp send aayilla');
             // });
           }
         }
@@ -214,7 +208,6 @@ module.exports = {
         });
       }
     } catch (err) {
-      console.log('errpreeee');
       res.json({
         message: 'verification failed',
       });
@@ -226,7 +219,6 @@ module.exports = {
         mail,
         pass,
       } =req.body;
-
       const mailOnly= await signupuser.findOne({
         email: mail,
       });
@@ -235,12 +227,10 @@ module.exports = {
         const passMatch = await bcrypt.compare(pass, mailOnly.password);
 
         if (!passMatch) {
-          console.log('incorrect');
           res.json({
             message: 'password incorrect',
           });
         } else {
-          console.log(mailOnly);
           const token = jwt.sign({
             id: mailOnly._id,
             username: mailOnly.username,
@@ -252,16 +242,13 @@ module.exports = {
           });
 
           if (passMatch && mailOnly.isAdmin) {
-            console.log('admin');
             res.json({
               success: true,
               admin: true,
               token,
               type: 'admin',
             });
-            console.log(token);
           } else if (passMatch && mailOnly.role.user) {
-            console.log('user');
             res.json({
               success: true,
               user: true,
@@ -269,14 +256,10 @@ module.exports = {
               token,
               type: 'user',
             });
-            console.log(token);
           } else if (passMatch && mailOnly.role.agency && mailOnly.verified) {
-            console.log('registered agency');
-
             const already= await signupuser.aggregate([{$match: {_id: new mongoose.Types.ObjectId(sin)}},
               {$lookup: {from: 'agencies',
                 localField: '_id', foreignField: 'userId', as: 'agencyfulldetails'}}]);
-            console.log(already);
 
             if (already.length > 0 && already[0].agencyfulldetails.length > 0) {
               res.json({
@@ -287,7 +270,6 @@ module.exports = {
                 profileadd: true,
                 type: 'agency',
               });
-              console.log(token);
             } else {
               res.json({
                 success: true,
@@ -299,7 +281,6 @@ module.exports = {
               });
             }
           } else {
-            console.log('not registered agency');
             emails(
                 mail,
                 'processing verification message',
@@ -310,7 +291,6 @@ module.exports = {
           }
         }
       } else {
-        console.log('user not found');
         res.json({message: 'user not found'});
       }
     } catch (error) {
@@ -324,7 +304,6 @@ module.exports = {
         console.log(err);
         res.status(500).json({message: 'Error destroying session'});
       } else {
-        console.log('distroyd');
         res.json({message: 'Logged out successfully'});
       }
     });

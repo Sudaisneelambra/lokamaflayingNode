@@ -8,51 +8,56 @@ const {uploads} =require('../models/multer/placeadd');
 const already =require('../models/middlewares/placeused');
 const guidealredayused =require('../models/middlewares/guideused');
 
-const {gettingprofilename} = require('../controllers/agencyController/agencyController');
-const {profileget} = require('../controllers/agencyController/agencyController');
 
-const {gettingplace} =require('../controllers/agencyController/agencyController');
-const {gettingguide} =require('../controllers/agencyController/agencyController');
-const {gettingpackage} =require('../controllers/agencyController/agencyController');
+// guide controller
+const {gettingguide} =require('../controllers/guidecontroller');
+const {gettingsingleguide} =require('../controllers/guidecontroller');
+const {editguide}=require('../controllers/guidecontroller');
+const {deleteguide}=require('../controllers/guidecontroller');
+const {addguide} =require('../controllers/guidecontroller');
 
-const {gettingsingleplace} =require('../controllers/agencyController/agencyController');
-const {gettingsingleguide} =require('../controllers/agencyController/agencyController');
+// place controller
+const {gettingplace} =require('../controllers/placecontroller');
+const {editplace}=require('../controllers/placecontroller');
+const {deletingPlace}=require('../controllers/placecontroller');
+const {addplace} =require('../controllers/placecontroller');
+const {gettingsingleplace} =require('../controllers/placecontroller');
 
-const {deletingPlace}=require('../controllers/agencyController/agencyController');
-const {deleteguide}=require('../controllers/agencyController/agencyController');
+// agencyprofile controller
+const {gettingprofilename} = require('../controllers/agencyprofilecontroller');
+const {profileget} = require('../controllers/agencyprofilecontroller');
+const {addprofile}= require('../controllers/agencyprofilecontroller');
 
-const {editplace}=require('../controllers/agencyController/agencyController');
-const {editguide}=require('../controllers/agencyController/agencyController');
+// package controller
+const {gettingpackage} =require('../controllers/packagecontroller');
+const {packageadd} =require('../controllers/packagecontroller');
+const {getsinglepackage} =require('../controllers/packagecontroller');
 
-const {addprofile}= require('../controllers/agencyController/agencyController');
-const {addplace} =require('../controllers/agencyController/agencyController');
-const {addguide} =require('../controllers/agencyController/agencyController');
-const {packageadd} =require('../controllers/agencyController/agencyController');
-const {getsinglepackage} =require('../controllers/agencyController/agencyController');
-
-
+// profile
 router.get('/profilenameget', tockenCheck, gettingprofilename);
 router.get('/profileget', tockenCheck, profileget);
-router.get('/getplace', tockenCheck, gettingplace);
-router.get('/getguide', tockenCheck, gettingguide);
+router.post('/profileadd', tockenCheck, upload.fields([{name: 'files'}, {name: 'logo'}]), addprofile);
+
+// package
 router.get('/getpackage', tockenCheck, gettingpackage);
-router.get('/getsingleplace/:id', tockenCheck, gettingsingleplace);
-router.get('/getsingleguide/:id', tockenCheck, gettingsingleguide);
+router.post('/packageadd', tockenCheck, packageadd);
 router.get('/getsinglepackage/:id', tockenCheck, getsinglepackage);
 
-router.get('/gettoken', tockenCheck);
-
-
-router.delete('/deleteplace/:id', tockenCheck, deletingPlace);
-router.delete('/deleteguide/:id', tockenCheck, deleteguide);
+// place
+router.get('/getplace', tockenCheck, gettingplace);
 router.put('/editplace', tockenCheck, uploads.array('images', 5), editplace);
-router.put('/editguide', tockenCheck, uploads.single('guideimages'), editguide);
-
-
-router.post('/profileadd', tockenCheck, upload.fields([{name: 'files'}, {name: 'logo'}]), addprofile);
+router.delete('/deleteplace/:id', tockenCheck, deletingPlace);
 router.post('/placeadd', tockenCheck, uploads.array('images', 5), already, addplace);
-router.post('/guideadd', tockenCheck, uploads.single('guideimages'), guidealredayused, addguide);
-router.post('/packageadd', tockenCheck, packageadd);
+router.get('/getsingleplace/:id', tockenCheck, gettingsingleplace);
 
+// guide
+router.get('/getguide', tockenCheck, gettingguide);
+router.get('/getsingleguide/:id', tockenCheck, gettingsingleguide);
+router.put('/editguide', tockenCheck, uploads.single('guideimages'), editguide);
+router.delete('/deleteguide/:id', tockenCheck, deleteguide);
+router.post('/guideadd', tockenCheck, uploads.single('guideimages'), guidealredayused, addguide);
+
+
+router.get('/gettoken', tockenCheck);
 
 module.exports=router;

@@ -84,7 +84,15 @@ const packageschema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      arrivalDate: {
+        type: String,
+        required: true,
+      },
       arrivingtime: {
+        type: String,
+        required: true,
+      },
+      returnDate: {
         type: String,
         required: true,
       },

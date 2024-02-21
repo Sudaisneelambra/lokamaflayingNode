@@ -16,7 +16,6 @@ const guidealredayused = async (req, res, next)=>{
     const sin = guideused.filter((m)=>{
       return m.guidename == guidename;
     });
-    console.log(sin);
     if (sin.length > 0) {
       const key = req.file.key; // Assuming multer-s3 provides the file key
 

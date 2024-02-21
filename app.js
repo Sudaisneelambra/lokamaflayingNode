@@ -25,7 +25,14 @@ app.use(session({
 const DB_URL=process.env.DB_connection;
 
 // connecting mongodb
-mongoose.connect(DB_URL);
+mongoose.connect(DB_URL).then((res)=>{
+  app.listen(3000, ()=>{
+    console.log('server running on 3000 port');
+  });
+})
+    .catch((err)=>{
+      console.log('server connection failed');
+    });
 
 // using cors
 app.use(cors());
@@ -40,6 +47,3 @@ app.use('/user', userRout);
 app.use('/agency', agencyRoutes);
 
 
-app.listen(3000, ()=>{
-  console.log('server running on 3000 port');
-});
