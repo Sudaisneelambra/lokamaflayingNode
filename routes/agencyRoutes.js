@@ -22,6 +22,9 @@ const {editplace}=require('../controllers/placecontroller');
 const {deletingPlace}=require('../controllers/placecontroller');
 const {addplace} =require('../controllers/placecontroller');
 const {gettingsingleplace} =require('../controllers/placecontroller');
+const {conformation} =require('../controllers/placecontroller');
+const {packageplacedeleting} =require('../controllers/placecontroller');
+
 
 // agencyprofile controller
 const {gettingprofilename} = require('../controllers/agencyprofilecontroller');
@@ -55,6 +58,9 @@ router.put('/editplace', tockenCheck, uploads.array('images', 5), editplace);
 router.delete('/deleteplace/:id', tockenCheck, deletingPlace);
 router.post('/placeadd', tockenCheck, uploads.array('images', 5), already, addplace);
 router.get('/getsingleplace/:id', tockenCheck, gettingsingleplace);
+router.get('/confirmation/:id', tockenCheck, conformation);
+router.delete('/deletepackageplace/:id', tockenCheck, packageplacedeleting);
+
 
 // guide
 router.get('/getguide', tockenCheck, gettingguide);

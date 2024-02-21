@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const place =require('../models/mongose/agency/placeadd');
 const profile=require('../models/mongose/agency/profileadd');
+const package =require('../models/mongose/agency/package');
 
 
 module.exports ={
@@ -136,5 +137,45 @@ module.exports ={
     } catch (error) {
       res.status(404).json({message: 'failed on getting place data', error: error});
     }
+  },
+  conformation: async (req, res)=> {
+    try {
+      const str = req.tokens.id;
+      const objectId = new mongoose.Types.ObjectId(str);
+      const prof = await profile.findOne({
+        userId: objectId,
+      });
+      const pac = await package.find({agencyid: prof._id});
+      console.log(pac);
+      const placeIds = pac.flatMap((item) => item.places.map((place) => place.placeid));
+      console.log(placeIds);
+      console.log('sudais');
+      const id = req.params.id;
+      console.log(id);
+      console.log(placeIds);
+      const stringIdsArray = placeIds.map((id) => id.toString());
+      console.log(stringIdsArray);
+      const find= stringIdsArray.find((m)=>{
+        return m==id;
+      });
+      console.log(find);
+      if (find) {
+        res.json({
+          strict: true,
+          message: 'place included in package',
+        });
+      } else {
+        res.json({
+          strict: false,
+          message: 'place exclude in package',
+        });
+      }
+    } catch (error) {
+
+    }
+  },
+  packageplacedeleting: (req, res)=> {
+    const id= new mongoose.Types.ObjectId(req.params.id);
+    
   },
 };
