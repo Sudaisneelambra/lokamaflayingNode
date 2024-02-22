@@ -122,7 +122,6 @@ module.exports={
   },
   editpackage: async (req, res)=> {
     try {
-      console.log('sudais');
       const {mainform, places, guid} = req.body;
       const id= new mongoose.Types.ObjectId(req.body.id);
       const {packageName, aboutPackage, packagePrice, fecilities,
@@ -170,7 +169,6 @@ module.exports={
           agencyid: prof._id,
         }});
 
-      console.log(update);
       if (update) {
         res.json({success: true, message: 'package updatted succes fully'});
       } else {

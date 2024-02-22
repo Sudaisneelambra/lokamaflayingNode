@@ -15,6 +15,9 @@ const {gettingsingleguide} =require('../controllers/guidecontroller');
 const {editguide}=require('../controllers/guidecontroller');
 const {deleteguide}=require('../controllers/guidecontroller');
 const {addguide} =require('../controllers/guidecontroller');
+const {conformations} =require('../controllers/guidecontroller');
+const {deletepackageguide} =require('../controllers/guidecontroller');
+
 
 // place controller
 const {gettingplace} =require('../controllers/placecontroller');
@@ -68,6 +71,8 @@ router.get('/getsingleguide/:id', tockenCheck, gettingsingleguide);
 router.put('/editguide', tockenCheck, uploads.single('guideimages'), editguide);
 router.delete('/deleteguide/:id', tockenCheck, deleteguide);
 router.post('/guideadd', tockenCheck, uploads.single('guideimages'), guidealredayused, addguide);
+router.get('/confirmationguid/:id', tockenCheck, conformations);
+router.delete('/deletepackageguide/:id', tockenCheck, deletepackageguide);
 
 
 router.get('/gettoken', tockenCheck);

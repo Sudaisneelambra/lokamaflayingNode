@@ -63,7 +63,7 @@ const packageschema = new mongoose.Schema({
   },
   offerRate: {
     type: Number,
-    default: 'no',
+    default: 0,
   },
   maximumCapacity: {
     type: Number,

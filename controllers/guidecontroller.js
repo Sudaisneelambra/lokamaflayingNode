@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const guide =require('../models/mongose/agency/guidadd');
 const profile=require('../models/mongose/agency/profileadd');
+const package=require('../models/mongose/agency/package');
 
 module.exports={
   gettingguide: async (req, res)=>{
@@ -116,6 +117,57 @@ module.exports={
       });
     } catch (err) {
       res.status(500).send({error: 'Error uploading file'});
+    }
+  },
+  conformations: async (req, res)=> {
+    try {
+      const str = req.tokens.id;
+      const objectId = new mongoose.Types.ObjectId(str);
+      const prof = await profile.findOne({
+        userId: objectId,
+      });
+      const pac = await package.find({agencyid: prof._id});
+      const guideIds = pac.flatMap((item) => item.guid.map((guid) => guid.id));
+      const id = req.params.id;
+      const stringIdsArray = guideIds.map((id) => id.toString());
+      const find= stringIdsArray.find((m)=>{
+        return m==id;
+      });
+      if (find) {
+        res.json({
+          strict: true,
+          message: 'guid included in package',
+        });
+      } else {
+        res.json({
+          strict: false,
+          message: 'guid exclude in package',
+        });
+      }
+    } catch (error) {
+
+    }
+  },
+  deletepackageguide: async (req, res)=>{
+    try {
+      const id= req.params.id;
+      const str = req.tokens.id;
+      const userid = new mongoose.Types.ObjectId(str);
+      const prof = await profile.findOne({userId: userid});
+      const pac = await package.find({agencyid: prof._id});
+      pac.forEach(async (pkg) => {
+        const index = pkg.guid.findIndex((guide) =>{
+          return guide.id.toString() == id;
+        });
+        if (index !== -1) {
+          pkg.guid.splice(index, 1);
+          await pkg.save();
+          const deletedguide = await guide.findByIdAndDelete({_id: new mongoose.Types.ObjectId(id)});
+          res.json({success: true, message: 'place deleted successfully', place: deletedguide});
+        }
+      });
+    } catch (err) {
+      res.json({message: 'failed on deleting place data', error: err});
     }
   },
 };

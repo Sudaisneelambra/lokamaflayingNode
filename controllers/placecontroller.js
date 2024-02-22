@@ -146,19 +146,12 @@ module.exports ={
         userId: objectId,
       });
       const pac = await package.find({agencyid: prof._id});
-      console.log(pac);
       const placeIds = pac.flatMap((item) => item.places.map((place) => place.placeid));
-      console.log(placeIds);
-      console.log('sudais');
       const id = req.params.id;
-      console.log(id);
-      console.log(placeIds);
       const stringIdsArray = placeIds.map((id) => id.toString());
-      console.log(stringIdsArray);
       const find= stringIdsArray.find((m)=>{
         return m==id;
       });
-      console.log(find);
       if (find) {
         res.json({
           strict: true,
@@ -174,8 +167,26 @@ module.exports ={
 
     }
   },
-  packageplacedeleting: (req, res)=> {
-    const id= new mongoose.Types.ObjectId(req.params.id);
-    
+  packageplacedeleting: async (req, res)=> {
+    try {
+      const id= req.params.id;
+      const str = req.tokens.id;
+      const userid = new mongoose.Types.ObjectId(str);
+      const prof = await profile.findOne({userId: userid});
+      const pac = await package.find({agencyid: prof._id});
+      pac.forEach(async (pkg) => {
+        const index = pkg.places.findIndex((place) =>{
+          return place.placeid.toString() == id;
+        });
+        if (index !== -1) {
+          pkg.places.splice(index, 1);
+          await pkg.save();
+          const deletedplace = await place.findByIdAndDelete({_id: new mongoose.Types.ObjectId(id)});
+          res.json({success: true, message: 'place deleted successfully', place: deletedplace});
+        }
+      });
+    } catch (err) {
+      res.json({message: 'failed on deleting place data', error: err});
+    }
   },
 };
