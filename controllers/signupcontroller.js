@@ -3,10 +3,10 @@
 // requiring otp generator
 const otpgenerator = require('otp-generator');
 require('dotenv').config();
-const serviceSid=process.env.SERVICESIDTWILIO;
-const accountSid=process.env.ACCOUNTSIDTWILIO;
-const authId=process.env.AUTHTOCKENTWILIO;
-const secretKey=process.env.SECRET_KEY;
+const serviceSid = process.env.SERVICESIDTWILIO;
+const accountSid = process.env.ACCOUNTSIDTWILIO;
+const authId = process.env.AUTHTOCKENTWILIO;
+const secretKey = process.env.SECRET_KEY;
 const twilio = require('twilio');
 const client = twilio(accountSid, authId);
 const bcrypt = require('bcrypt');
@@ -14,37 +14,29 @@ const starRound = 10;
 const jwt = require('jsonwebtoken');
 
 const mongoose = require('mongoose');
-const agency=require('../models/mongose/agency/profileadd');
-
+const agency = require('../models/mongose/agency/profileadd');
 
 // requiring email send from another folder
 const emails = require('../models/mailsend/mailSend');
 const otpSend = require('../models/mailsend/otpPhone');
 
-const signupuser=require('../models/mongose/user/signup');
+const signupuser = require('../models/mongose/user/signup');
 
 module.exports = {
-  getSignup: () => {
-  },
+  getSignup: () => {},
   postSignup: async (req, res) => {
     try {
       const data = req.body;
-      const {
-        username,
-        email,
-        password,
-        phoneNumber,
-        role,
-      } = req.body;
+      const {username, email, password, phoneNumber, role} = req.body;
 
-      if (!username&&!email&&!password&&!phoneNumber) {
+      if (!username && !email && !password && !phoneNumber) {
         res.status(400).json({
           message: 'Please fill all the fields',
         });
       } else {
         if (data.role) {
-        // find existing user
-          const existingUser=await signupuser.findOne({
+          // find existing user
+          const existingUser = await signupuser.findOne({
             username: username,
             email: email,
             password: password,
@@ -54,7 +46,7 @@ module.exports = {
           });
 
           // find existing agency
-          const existAgency=await signupuser.findOne({
+          const existAgency = await signupuser.findOne({
             username: username,
             email: email,
             password: password,
@@ -64,11 +56,13 @@ module.exports = {
           });
 
           // find email exist
-          const emailexist=await signupuser.findOne({
+          const emailexist = await signupuser.findOne({
             email: email,
           });
           // find phonenumber exist
-          const phonenumberexist=await signupuser.findOne({phoneNumber: phoneNumber});
+          const phonenumberexist = await signupuser.findOne({
+            phoneNumber: phoneNumber,
+          });
           if (existingUser) {
             res.json({
               message: 'user already exist.please login',
@@ -94,19 +88,23 @@ module.exports = {
             });
 
             otpSend(phoneNumber)
-                .then((msg)=>{
+                .then((msg) => {
                   res.json({
                     otpsend: true,
                     message: 'otp send successfully',
                   });
                 })
-                .catch((err)=>{
+                .catch((err) => {
                   res.json({
                     otpsend: false,
                     message: `otp send filed : ${err}`,
                   });
                 });
-            emails(email, 'otp verification mail', `your verification otp is ${otp}. please verify this otp`);
+            emails(
+                email,
+                'otp verification mail',
+                `your verification otp is ${otp}. please verify this otp`,
+            );
             // .then((msg)=>{
             //   res.json({otpsend: true, message: 'otp send successfully'});
             // })
@@ -121,29 +119,26 @@ module.exports = {
     }
   },
 
-
-  postOtpverification: async (req, res)=>{
+  postOtpverification: async (req, res) => {
     try {
-      const {
-        otp,
-        username,
-        email,
-        password,
-        phoneNumber,
-        role,
-      }=req.body;
-      const phone=+phoneNumber;
+      const {otp, username, email, password, phoneNumber, role} = req.body;
+      const phone = +phoneNumber;
 
       // verification check
-      const verificationCheck =await client.verify.v2.services(serviceSid)
+      const verificationCheck = await client.verify.v2
+          .services(serviceSid)
           .verificationChecks.create({to: `+91${phone}`, code: otp});
 
       // if user or agency check
 
       const hashedPassword = await bcrypt.hash(password, starRound);
 
-      if (verificationCheck && verificationCheck.status==='approved' && role.user) {
-        const user= new signupuser({
+      if (
+        verificationCheck &&
+        verificationCheck.status === 'approved' &&
+        role.user
+      ) {
+        const user = new signupuser({
           username,
           email,
           password: hashedPassword,
@@ -157,14 +152,16 @@ module.exports = {
         });
 
         await user.save();
-        const token = jwt.sign({
-          id: mailOnly.id,
-          username: mailOnly.username,
-        },
-        secretKey,
-        {
-          expiresIn: '1h',
-        });
+        const token = jwt.sign(
+            {
+              id: mailOnly.id,
+              username: mailOnly.username,
+            },
+            secretKey,
+            {
+              expiresIn: '1h',
+            },
+        );
 
         res.json({
           success: true,
@@ -172,7 +169,11 @@ module.exports = {
           message: 'successfully verified user',
           token,
         });
-      } else if (verificationCheck && verificationCheck.status==='approved' && role.agency) {
+      } else if (
+        verificationCheck &&
+        verificationCheck.status === 'approved' &&
+        role.agency
+      ) {
         const agency = new signupuser({
           username,
           email,
@@ -183,7 +184,8 @@ module.exports = {
           role: {
             agency: true,
             user: false,
-          }});
+          },
+        });
 
         await agency.save();
 
@@ -211,18 +213,15 @@ module.exports = {
       res.json({
         message: 'verification failed',
       });
-    };
+    }
   },
-  postLogin: async (req, res)=>{
+  postLogin: async (req, res) => {
     try {
-      const {
-        mail,
-        pass,
-      } =req.body;
-      const mailOnly= await signupuser.findOne({
+      const {mail, pass} = req.body;
+      const mailOnly = await signupuser.findOne({
         email: mail,
       });
-      const sin= mailOnly._id;
+      const sin = mailOnly._id;
       if (mailOnly) {
         const passMatch = await bcrypt.compare(pass, mailOnly.password);
 
@@ -231,15 +230,17 @@ module.exports = {
             message: 'password incorrect',
           });
         } else {
-          const token = jwt.sign({
-            id: mailOnly._id,
-            username: mailOnly.username,
-            verified: mailOnly.verified,
-          },
-          secretKey,
-          {
-            expiresIn: '1h',
-          });
+          const token = jwt.sign(
+              {
+                id: mailOnly._id,
+                username: mailOnly.username,
+                verified: mailOnly.verified,
+              },
+              secretKey,
+              {
+                expiresIn: '1h',
+              },
+          );
 
           if (passMatch && mailOnly.isAdmin) {
             res.json({
@@ -248,18 +249,37 @@ module.exports = {
               token,
               type: 'admin',
             });
-          } else if (passMatch && mailOnly.role.user) {
+          } else if (passMatch && mailOnly.role.user && !mailOnly.blockstatus) {
             res.json({
               success: true,
               user: true,
-              message: 'user successfully registered',
+              message: 'user successfully logined',
               token,
               type: 'user',
             });
-          } else if (passMatch && mailOnly.role.agency && mailOnly.verified) {
-            const already= await signupuser.aggregate([{$match: {_id: new mongoose.Types.ObjectId(sin)}},
-              {$lookup: {from: 'agencies',
-                localField: '_id', foreignField: 'userId', as: 'agencyfulldetails'}}]);
+          } else if (passMatch && mailOnly.role.user && mailOnly.blockstatus) {
+            res.json({
+              message: 'admin blocket your accees to home page',
+              token,
+              type: 'user',
+            });
+          } else if (
+            passMatch &&
+            mailOnly.role.agency &&
+            mailOnly.verified &&
+            !mailOnly.blockstatus
+          ) {
+            const already = await signupuser.aggregate([
+              {$match: {_id: new mongoose.Types.ObjectId(sin)}},
+              {
+                $lookup: {
+                  from: 'agencies',
+                  localField: '_id',
+                  foreignField: 'userId',
+                  as: 'agencyfulldetails',
+                },
+              },
+            ]);
 
             if (already.length > 0 && already[0].agencyfulldetails.length > 0) {
               res.json({
@@ -280,6 +300,10 @@ module.exports = {
                 type: 'agency',
               });
             }
+          } else if (mailOnly.blockstatus) {
+            res.json({
+              message: 'admin blocket your accees to home page',
+            });
           } else {
             emails(
                 mail,
@@ -287,7 +311,11 @@ module.exports = {
                 // eslint-disable-next-line max-len
                 `dear costomer ,your verification message send to the admin,but he didnt verified your mail, wait for verification`,
             );
-            res.json({success: true, resistered: false, message: 'not registered agency'});
+            res.json({
+              success: true,
+              resistered: false,
+              message: 'not registered agency',
+            });
           }
         }
       } else {
@@ -298,7 +326,7 @@ module.exports = {
     }
   },
 
-  logout: (req, res)=>{
+  logout: (req, res) => {
     req.session.destroy((err) => {
       if (err) {
         console.log(err);
@@ -308,6 +336,4 @@ module.exports = {
       }
     });
   },
-
-
 };

@@ -25,6 +25,10 @@ const signupSchema=new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  blockstatus: {
+    type: Boolean,
+    default: false,
+  },
   role: {
     agency: {
       type: Boolean,

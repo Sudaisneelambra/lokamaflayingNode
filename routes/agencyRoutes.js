@@ -33,6 +33,8 @@ const {packageplacedeleting} =require('../controllers/placecontroller');
 const {gettingprofilename} = require('../controllers/agencyprofilecontroller');
 const {profileget} = require('../controllers/agencyprofilecontroller');
 const {addprofile}= require('../controllers/agencyprofilecontroller');
+const {profileckeck}= require('../controllers/agencyprofilecontroller');
+
 
 // package controller
 const {gettingpackage} =require('../controllers/packagecontroller');
@@ -73,6 +75,8 @@ router.delete('/deleteguide/:id', tockenCheck, deleteguide);
 router.post('/guideadd', tockenCheck, uploads.single('guideimages'), guidealredayused, addguide);
 router.get('/confirmationguid/:id', tockenCheck, conformations);
 router.delete('/deletepackageguide/:id', tockenCheck, deletepackageguide);
+
+router.get('/profileckeck', tockenCheck, profileckeck);
 
 
 router.get('/gettoken', tockenCheck);

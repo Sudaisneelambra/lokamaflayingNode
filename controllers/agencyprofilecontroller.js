@@ -73,4 +73,14 @@ module.exports={
       res.status(500).send({error: 'Error uploading file'});
     }
   },
+  profileckeck: async (req, res) =>{
+    const id = req.tokens.id;
+    const prof= await profile.findOne({userId: new mongoose.Types.ObjectId(id)});
+
+    if (prof) {
+      res.json({profileadd: true});
+    } else {
+      res.json({profileadd: false});
+    }
+  },
 };
