@@ -3,12 +3,13 @@ const router=express.Router();
 
 const tockenCheck=require('../models/middlewares/tockenckeck');
 
+// user
 const {getuserlist}=require('../controllers/adminuserlistcontroller');
 const {getblockeduserlist}=require('../controllers/adminuserlistcontroller');
 const {blockuser}=require('../controllers/adminuserlistcontroller');
 const {unblockuser}=require('../controllers/adminuserlistcontroller');
 
-
+// agency
 const {getagencylist}=require('../controllers/adminagencylist.controller');
 const {getblockedagencylist}=require('../controllers/adminagencylist.controller');
 const {agencyblock}=require('../controllers/adminagencylist.controller');
@@ -16,21 +17,38 @@ const {agencyunblock}=require('../controllers/adminagencylist.controller');
 const {getagencyfulldetais}=require('../controllers/adminagencylist.controller');
 
 
+// package
+const {gettingpackages} =require('../controllers/adminpackage.controller');
+const {packageblock} =require('../controllers/adminpackage.controller');
+const {packageunblock} =require('../controllers/adminpackage.controller');
+
+// places
+const {gettingallplaces} =require('../controllers/adminplaces.controller');
+
+
 const {requests}=require('../controllers/requests.controller');
 const {approve}=require('../controllers/requests.controller');
 
-
+// agenncy
 router.get('/getagencylist', tockenCheck, getagencylist);
 router.get('/getblockedagencylist', tockenCheck, getblockedagencylist);
 router.post('/agencyblock', tockenCheck, agencyblock);
 router.post('/agencyunblock', tockenCheck, agencyunblock);
 router.get('/getagencyfulldetais/:id', tockenCheck, getagencyfulldetais);
 
-
+// user
 router.get('/getuserlist', tockenCheck, getuserlist);
 router.get('/getblockeduserlist', tockenCheck, getblockeduserlist);
 router.post('/blockuser', tockenCheck, blockuser);
 router.post('/unblockuser', tockenCheck, unblockuser);
+
+// package
+router.get('/gettingpackages', tockenCheck, gettingpackages);
+router.post('/packageblock', tockenCheck, packageblock);
+router.post('/packageunblock', tockenCheck, packageunblock);
+
+// places
+router.get('/gettingallplaces', tockenCheck, gettingallplaces);
 
 
 router.get('/requests', tockenCheck, requests);
