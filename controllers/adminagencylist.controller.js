@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const signupuser = require('../models/mongose/user/signup');
+const profile = require('../models/mongose/agency/profileadd');
+
 const emails = require('../models/mailsend/mailSend');
 // const profile = require('../models/mongose/agency/profileadd');
 
@@ -26,7 +28,6 @@ module.exports = {
           },
         },
       ]);
-      console.log(list);
       res.json({list});
     } catch (error) {
       console.log(error);
@@ -54,7 +55,6 @@ module.exports = {
           },
         },
       ]);
-      console.log(list);
       res.json({list});
     } catch (error) {
       console.log(error);
@@ -72,11 +72,10 @@ module.exports = {
           `Dear agency, the Lokahama admin has blocked your access to our website due to some illegal issues. We apologize for the inconvenience.`,
       )
           .then(async () => {
-            const updated = await signupuser.updateOne(
+            await signupuser.updateOne(
                 {_id: new mongoose.Types.ObjectId(id)},
                 {$set: {blockstatus: true}},
             );
-            console.log(updated);
             res.json({success: true, message: 'succesfully blocked'});
           })
           .catch((error) => {
@@ -99,11 +98,10 @@ module.exports = {
           `Dear agency, the Lokahama admin has unblocked .`,
       )
           .then(async () => {
-            const updated = await signupuser.updateOne(
+            await signupuser.updateOne(
                 {_id: new mongoose.Types.ObjectId(id)},
                 {$set: {blockstatus: false}},
             );
-            console.log(updated);
             res.json({success: true, message: 'succesfully unblocked'});
           })
           .catch((error) => {
@@ -112,6 +110,16 @@ module.exports = {
           });
     } catch (err) {
       console.log(err);
+    }
+  },
+  getagencyfulldetais: async (req, res) =>{
+    try {
+      const id= new mongoose.Types.ObjectId(req.params.id);
+      const user = await signupuser.findOne({_id: id});
+      const agency = await profile.findOne({userId: user._id});
+      res.json({agency});
+    } catch (err) {
+      res.json(`error occured ${err}`);
     }
   },
 };
