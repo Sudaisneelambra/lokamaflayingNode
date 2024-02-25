@@ -3,6 +3,8 @@ const express=require('express');
 const app=express();
 const userRout=require('./routes/user');
 const agencyRoutes=require('./routes/agencyRoutes');
+const adminRoutes=require('./routes/adminRouting');
+
 
 require('dotenv').config();
 
@@ -45,5 +47,6 @@ app.use(bodyParser.json());
 
 app.use('/user', userRout);
 app.use('/agency', agencyRoutes);
+app.use('/admin', adminRoutes);
 
 

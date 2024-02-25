@@ -218,11 +218,13 @@ module.exports = {
   postLogin: async (req, res) => {
     try {
       const {mail, pass} = req.body;
+      console.log(req.body);
       const mailOnly = await signupuser.findOne({
         email: mail,
       });
-      const sin = mailOnly._id;
       if (mailOnly) {
+        console.log(mailOnly);
+        const sin = mailOnly._id;
         const passMatch = await bcrypt.compare(pass, mailOnly.password);
 
         if (!passMatch) {
@@ -246,6 +248,7 @@ module.exports = {
             res.json({
               success: true,
               admin: true,
+              message: 'admin successfully logined',
               token,
               type: 'admin',
             });

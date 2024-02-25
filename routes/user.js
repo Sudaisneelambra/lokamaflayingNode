@@ -22,8 +22,8 @@ const sud=require('../models/middlewares/userSignup');
 router.get('/signup', getSignup);
 
 
-router.post('/signup', sud, tockenCheck, postSignup );
-router.post('/signup/otpverification', tockenCheck, postOtpverification );
+router.post('/signup', sud, postSignup );
+router.post('/signup/otpverification', postOtpverification );
 router.post('/login', postLogin);
 router.get('/logout', tockenCheck, logout);
 

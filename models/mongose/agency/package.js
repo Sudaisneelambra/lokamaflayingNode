@@ -73,6 +73,11 @@ const packageschema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  blockstatus: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   places: {
     type: [{
       placeid: {
