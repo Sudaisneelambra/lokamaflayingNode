@@ -25,6 +25,9 @@ const {packageunblock} =require('../controllers/adminpackage.controller');
 // places
 const {gettingallplaces} =require('../controllers/adminplaces.controller');
 
+// guides
+const {gettingguides} =require('../controllers/adminguides.controller');
+
 
 const {requests}=require('../controllers/requests.controller');
 const {approve}=require('../controllers/requests.controller');
@@ -50,6 +53,8 @@ router.post('/packageunblock', tockenCheck, packageunblock);
 // places
 router.get('/gettingallplaces', tockenCheck, gettingallplaces);
 
+// guides
+router.get('/gettingguides', tockenCheck, gettingguides);
 
 router.get('/requests', tockenCheck, requests);
 router.post('/approve', tockenCheck, approve);

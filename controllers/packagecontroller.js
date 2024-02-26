@@ -89,6 +89,7 @@ module.exports={
       const packageid= new mongoose.Types.ObjectId(req.params.id);
       const pack= await package.findOne({_id: packageid});
       if (pack) {
+        console.log(pack);
         const placeIds = pack.places.map((place) => place.placeid);
         const guideIds = pack.guid.map((guid) => guid.id);
         // Assuming you have a Place model
@@ -105,6 +106,7 @@ module.exports={
       } else {
         res.json({
           message: 'getting package failed',
+          success: false,
         });
       }
     } catch (err) {
