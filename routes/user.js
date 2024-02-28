@@ -25,6 +25,7 @@ const {getprof}=require('../controllers/userprofile.controller');
 // package
 const {getpackages}=require('../controllers/userpackage.controller');
 
+
 // places
 const {getplaces}=require('../controllers/userplace.controller');
 const {getsingleplace}=require('../controllers/userplace.controller');
@@ -50,6 +51,7 @@ router.get('/getprof/:id', tockenCheck, getprof);
 
 // package
 router.get('/getpackages', tockenCheck, getpackages);
+
 
 // places
 router.get('/getplaces', tockenCheck, getplaces);
