@@ -6,6 +6,7 @@ const checkTocken=(req, res, next)=>{
   const authorizationHeader = req.headers['authorization'];
   jwt.verify(authorizationHeader, secretKey, (err, decoded) => {
     if (err) {
+      console.log(err);
       res.json({message: `verification fialed due to  ${err.message}`, expiry: err.message});
     } else {
       // Token is verified successfully

@@ -1,8 +1,8 @@
-const place=require('../mongose/agency/placeadd');
-const profile=require('../mongose/agency/profileadd');
+const place=require('../models/placeadd');
+const profile=require('../models/profileadd');
 require('dotenv').config();
 const {DeleteObjectCommand} = require('@aws-sdk/client-s3');
-const {s3Client} = require('../multer/placeadd');
+const {s3Client} = require('../utils/placeadd');
 
 
 const already= async (req, res, next)=>{

@@ -1,4 +1,4 @@
-const guides = require('../models/mongose/agency/guidadd');
+const guides = require('../models/guidadd');
 
 module.exports = {
   gettingguides: async (req, res) => {

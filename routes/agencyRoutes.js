@@ -1,12 +1,12 @@
 const express =require('express');
 const router=express.Router();
 
-const tockenCheck=require('../models/middlewares/tockenckeck');
+const tockenCheck=require('../middlewares/tockenckeck');
 
-const upload =require('../models/multer/profileadd');
-const {uploads} =require('../models/multer/placeadd');
-const already =require('../models/middlewares/placeused');
-const guidealredayused =require('../models/middlewares/guideused');
+const upload =require('../utils/profileadd');
+const {uploads} =require('../utils/placeadd');
+const already =require('../middlewares/placeused');
+const guidealredayused =require('../middlewares/guideused');
 
 
 // guide controller

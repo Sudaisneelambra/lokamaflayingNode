@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const profile=require('../models/mongose/agency/profileadd');
+const profile=require('../models/profileadd');
 
 
 module.exports={

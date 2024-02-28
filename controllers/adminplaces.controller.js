@@ -1,4 +1,4 @@
-const place= require('../models/mongose/agency/placeadd');
+const place= require('../models/placeadd');
 
 module.exports={
   gettingallplaces: async (req, res)=> {

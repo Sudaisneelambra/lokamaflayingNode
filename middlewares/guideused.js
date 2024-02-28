@@ -1,8 +1,8 @@
-const guide=require('../mongose/agency/guidadd');
-const profile=require('../mongose/agency/profileadd');
+const guide=require('../models/guidadd');
+const profile=require('../models/profileadd');
 require('dotenv').config();
 const {DeleteObjectCommand} = require('@aws-sdk/client-s3');
-const {s3Client} = require('../multer/placeadd');
+const {s3Client} = require('../utils/placeadd');
 
 
 const guidealredayused = async (req, res, next)=>{

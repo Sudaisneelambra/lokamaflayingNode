@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 const mongoose = require('mongoose');
-const guide =require('../models/mongose/agency/guidadd');
-const profile=require('../models/mongose/agency/profileadd');
-const package=require('../models/mongose/agency/package');
+const guide =require('../models/guidadd');
+const profile=require('../models/profileadd');
+const package=require('../models/package');
 
 module.exports={
   gettingguide: async (req, res)=>{

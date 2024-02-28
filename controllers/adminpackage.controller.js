@@ -1,4 +1,4 @@
-const packages = require('../models/mongose/agency/package');
+const packages = require('../models/package');
 
 module.exports = {
   gettingpackages: async (req, res) => {

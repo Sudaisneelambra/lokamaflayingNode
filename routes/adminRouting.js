@@ -1,7 +1,7 @@
 const express =require('express');
 const router=express.Router();
 
-const tockenCheck=require('../models/middlewares/tockenckeck');
+const tockenCheck=require('../middlewares/tockenckeck');
 
 // user
 const {getuserlist}=require('../controllers/adminuserlistcontroller');

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const signupuser = require('../models/mongose/user/signup');
-const profile = require('../models/mongose/agency/profileadd');
+const signupuser = require('../models/signup');
+const profile = require('../models/profileadd');
 
-const emails = require('../models/mailsend/mailSend');
+const emails = require('../utils/mailSend');
 // const profile = require('../models/mongose/agency/profileadd');
 
 module.exports = {

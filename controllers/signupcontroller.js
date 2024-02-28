@@ -14,13 +14,13 @@ const starRound = 10;
 const jwt = require('jsonwebtoken');
 
 const mongoose = require('mongoose');
-const agency = require('../models/mongose/agency/profileadd');
+const agency = require('../models/profileadd');
 
 // requiring email send from another folder
-const emails = require('../models/mailsend/mailSend');
-const otpSend = require('../models/mailsend/otpPhone');
+const emails = require('../utils/mailSend');
+const otpSend = require('../utils/otpPhone');
 
-const signupuser = require('../models/mongose/user/signup');
+const signupuser = require('../models/signup');
 
 module.exports = {
   getSignup: () => {},

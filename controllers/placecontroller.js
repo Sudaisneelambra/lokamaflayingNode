@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 const mongoose = require('mongoose');
-const place =require('../models/mongose/agency/placeadd');
-const profile=require('../models/mongose/agency/profileadd');
-const package =require('../models/mongose/agency/package');
+const place =require('../models/placeadd');
+const profile=require('../models/profileadd');
+const package =require('../models/package');
 
 
 module.exports ={
