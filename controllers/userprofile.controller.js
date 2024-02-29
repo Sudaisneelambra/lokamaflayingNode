@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const userprofile = require('../models/userprofile');
+const signup =require('../models/signup');
 
 module.exports = {
   profileadd: async (req, res) => {
@@ -83,6 +84,21 @@ module.exports = {
         res
             .status(404)
             .json({success: false, message: 'profiegetting failed'});
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  username: async (req, res) =>{
+    try {
+      const id = new mongoose.Types.ObjectId(req.tokens.id);
+      const username = await signup.findOne({_id: id}).select('username');
+      if (username) {
+        res.json({success: true, data: username});
+      } else {
+        res
+            .status(404)
+            .json({success: false, message: 'username getting failed'});
       }
     } catch (error) {
       console.log(error);

@@ -21,6 +21,7 @@ const {logout}=require('../controllers/signupcontroller');
 const {profileadd}=require('../controllers/userprofile.controller');
 const {getprofile}=require('../controllers/userprofile.controller');
 const {getprof}=require('../controllers/userprofile.controller');
+const {username}=require('../controllers/userprofile.controller');
 
 // package
 const {getpackages}=require('../controllers/userpackage.controller');
@@ -48,6 +49,7 @@ router.get('/logout', tockenCheck, logout);
 router.post('/profileuser', tockenCheck, profileadd);
 router.get('/getprofile', tockenCheck, getprofile);
 router.get('/getprof/:id', tockenCheck, getprof);
+router.get('/username', tockenCheck, username);
 
 // package
 router.get('/getpackages', tockenCheck, getpackages);
