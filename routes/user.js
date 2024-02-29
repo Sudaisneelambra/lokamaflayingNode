@@ -35,6 +35,13 @@ const {getsingleplace}=require('../controllers/userplace.controller');
 // agency
 const {getagencies}=require('../controllers/useragency.controller');
 
+// wishlist
+const {addtowishlist}=require('../controllers/wishlistController');
+const {getwishlist}=require('../controllers/wishlistController');
+const {removewishlist}=require('../controllers/wishlistController');
+
+
+
 const sud=require('../middlewares/userSignup');
 
 router.get('/signup', getSignup);
@@ -62,5 +69,11 @@ router.get('/getsingleplace/:id', tockenCheck, getsingleplace);
 
 // agencies
 router.get('/getagencies', tockenCheck, getagencies);
+
+// wishlist
+router.post('/addtowishlist', tockenCheck, addtowishlist);
+router.get('/getwishlist', tockenCheck, getwishlist);
+router.delete('/removewishlist/:id', tockenCheck, removewishlist);
+
 
 module.exports=router;
