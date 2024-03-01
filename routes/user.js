@@ -41,6 +41,11 @@ const {addtowishlist}=require('../controllers/wishlistController');
 const {getwishlist}=require('../controllers/wishlistController');
 const {removewishlist}=require('../controllers/wishlistController');
 
+// payment and book
+const {creatingorder}=require('../controllers/bookandpayment.controller');
+const {bookingpayment}=require('../controllers/bookandpayment.controller');
+const {checkingalraedybooked}=require('../controllers/bookandpayment.controller');
+
 
 const sud=require('../middlewares/userSignup');
 
@@ -63,7 +68,6 @@ router.get('/getpackages', tockenCheck, getpackages);
 router.get('/getsinglepackage/:id', tockenCheck, getsinglepackage);
 
 
-
 // places
 router.get('/getplaces', tockenCheck, getplaces);
 router.get('/getsingleplace/:id', tockenCheck, getsingleplace);
@@ -76,6 +80,11 @@ router.get('/getagencies', tockenCheck, getagencies);
 router.post('/addtowishlist', tockenCheck, addtowishlist);
 router.get('/getwishlist', tockenCheck, getwishlist);
 router.delete('/removewishlist/:id', tockenCheck, removewishlist);
+
+// order payment
+router.post('/create-order', tockenCheck, creatingorder);
+router.post('/bookingpayment', tockenCheck, bookingpayment);
+router.get('/checkingalraedybooked/:id', tockenCheck, checkingalraedybooked);
 
 
 module.exports=router;

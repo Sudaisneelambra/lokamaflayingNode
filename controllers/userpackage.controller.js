@@ -33,7 +33,6 @@ module.exports = {
   getsinglepackage: async (req, res) => {
     try {
       const id = new mongoose.Types.ObjectId(req.params.id);
-      console.log(id);
       const pack = await packages.aggregate([
         {
           $match: {_id: id},

@@ -74,8 +74,6 @@ module.exports = {
   getprof: async (req, res) => {
     try {
       const id = new mongoose.Types.ObjectId(req.params.id);
-      console.log(id);
-      console.log('suda');
       const prof = await userprofile.findOne({_id: id});
       if (prof) {
         console.log(prof);

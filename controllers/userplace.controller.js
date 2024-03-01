@@ -17,7 +17,6 @@ module.exports={
   getsingleplace: async (req, res) =>{
     try {
       const id= new mongoose.Types.ObjectId(req.params.id);
-      console.log(id);
       const singleplace = await place.aggregate([{$match: {_id: id}}, {$lookup: {from: 'agencies',
         localField: 'agencyid', foreignField: '_id', as: 'agencydetails'}}]);
       if (singleplace) {
