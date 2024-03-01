@@ -25,6 +25,7 @@ const {username}=require('../controllers/userprofile.controller');
 
 // package
 const {getpackages}=require('../controllers/userpackage.controller');
+const {getsinglepackage}=require('../controllers/userpackage.controller');
 
 
 // places
@@ -39,7 +40,6 @@ const {getagencies}=require('../controllers/useragency.controller');
 const {addtowishlist}=require('../controllers/wishlistController');
 const {getwishlist}=require('../controllers/wishlistController');
 const {removewishlist}=require('../controllers/wishlistController');
-
 
 
 const sud=require('../middlewares/userSignup');
@@ -60,6 +60,8 @@ router.get('/username', tockenCheck, username);
 
 // package
 router.get('/getpackages', tockenCheck, getpackages);
+router.get('/getsinglepackage/:id', tockenCheck, getsinglepackage);
+
 
 
 // places
