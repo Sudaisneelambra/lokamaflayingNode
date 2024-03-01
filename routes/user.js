@@ -46,6 +46,9 @@ const {creatingorder}=require('../controllers/bookandpayment.controller');
 const {bookingpayment}=require('../controllers/bookandpayment.controller');
 const {checkingalraedybooked}=require('../controllers/bookandpayment.controller');
 
+// review and rating
+const {reviewandrating}=require('../controllers/reviewandrating');
+
 
 const sud=require('../middlewares/userSignup');
 
@@ -85,6 +88,9 @@ router.delete('/removewishlist/:id', tockenCheck, removewishlist);
 router.post('/create-order', tockenCheck, creatingorder);
 router.post('/bookingpayment', tockenCheck, bookingpayment);
 router.get('/checkingalraedybooked/:id', tockenCheck, checkingalraedybooked);
+
+// agency review
+router.post('/reviewandrating', tockenCheck, reviewandrating);
 
 
 module.exports=router;
