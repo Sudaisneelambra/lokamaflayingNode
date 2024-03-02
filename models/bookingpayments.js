@@ -24,6 +24,10 @@ const bookingpayament = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  Noofpersons: {
+    type: Number,
+    require: true,
+  },
 });
 
 

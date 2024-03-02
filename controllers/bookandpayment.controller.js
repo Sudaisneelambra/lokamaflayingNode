@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 const razorpay =require('../utils/rozorpay');
 const bookingpayment =require('../models/bookingpayments');
+const package =require('../models/package');
 const mongoose =require('mongoose');
 
 module.exports={
@@ -29,7 +30,7 @@ module.exports={
   },
   bookingpayment: async (req, res) => {
     try {
-      const {razorpay_payment_id, razorpay_order_id, packageid, agencyid, price}=req.body;
+      const {razorpay_payment_id, razorpay_order_id, packageid, agencyid, price, Noofpersons}=req.body;
       const userid= new mongoose.Types.ObjectId(req.tokens.id);
       const bookingsave = new bookingpayment({
         paymentid: razorpay_payment_id,
@@ -38,9 +39,13 @@ module.exports={
         agencyid: agencyid,
         packageid: packageid,
         price,
+        Noofpersons,
       });
 
       const saved= await bookingsave.save();
+      const pack = await package.findOne({_id: packageid});
+      const latestslot= parseInt(pack.availableSlot)-parseInt(Noofpersons);
+      await package.updateOne({_id: packageid}, {$set: {availableSlot: latestslot}});
       if (saved) {
         res.json({success: true, message: 'successfully added'});
       } else {
