@@ -48,7 +48,10 @@ const {checkingalraedybooked}=require('../controllers/bookandpayment.controller'
 
 // review and rating
 const {reviewandrating}=require('../controllers/reviewandrating');
+const {gettingpagereview}=require('../controllers/reviewandrating');
 
+// userguide
+const {getguide}=require('../controllers/userguide.controller');
 
 const sud=require('../middlewares/userSignup');
 
@@ -91,6 +94,9 @@ router.get('/checkingalraedybooked/:id', tockenCheck, checkingalraedybooked);
 
 // agency review
 router.post('/reviewandrating', tockenCheck, reviewandrating);
+router.get('/gettingpagereview', tockenCheck, gettingpagereview);
 
+// guid user
+router.get('/getguide', tockenCheck, getguide);
 
 module.exports=router;

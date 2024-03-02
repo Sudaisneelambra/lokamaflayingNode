@@ -29,7 +29,7 @@ module.exports={
   },
   bookingpayment: async (req, res) => {
     try {
-      const {razorpay_payment_id, razorpay_order_id, packageid, agencyid}=req.body;
+      const {razorpay_payment_id, razorpay_order_id, packageid, agencyid, price}=req.body;
       const userid= new mongoose.Types.ObjectId(req.tokens.id);
       const bookingsave = new bookingpayment({
         paymentid: razorpay_payment_id,
@@ -37,6 +37,7 @@ module.exports={
         userid: userid,
         agencyid: agencyid,
         packageid: packageid,
+        price,
       });
 
       const saved= await bookingsave.save();

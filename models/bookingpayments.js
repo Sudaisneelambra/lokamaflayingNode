@@ -20,6 +20,10 @@ const bookingpayament = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     required: true,
   },
+  price: {
+    type: Number,
+    required: true,
+  },
 });
 
 

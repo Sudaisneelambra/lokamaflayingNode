@@ -23,4 +23,32 @@ module.exports={
       console.log(err);
     }
   },
+  gettingpagereview: async (req, res) =>{
+    try {
+      const id =new mongoose.Types.ObjectId(req.tokens.id);
+
+      const rev = await review.aggregate(
+          [
+            {$match:
+                {userId: id},
+            },
+            {$lookup:
+                {
+                  from: 'usersignups',
+                  localField: 'userId',
+                  foreignField: '_id',
+                  as: 'userdetails',
+                },
+            },
+          ]);
+
+      if (rev) {
+        res.json({success: true, message: 'review getted successfully', data: rev});
+      } else {
+        res.json({success: false, message: 'review getting failed'});
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
