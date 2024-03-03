@@ -71,4 +71,27 @@ module.exports={
       res.status(500).send('Server Error');
     }
   },
+  bookingdetails: async (req, res) => {
+    try {
+      const userid= new mongoose.Types.ObjectId(req.tokens.id);
+      const booking = await bookingpayment.aggregate([
+        {
+          $match: {userid: userid},
+        },
+        {
+          $lookup: {from: 'agencies', localField: 'agencyid', foreignField: '_id', as: 'agencydetails'},
+        },
+        {
+          $lookup: {from: 'packages', localField: 'packageid', foreignField: '_id', as: 'packagedetails'},
+        }]);
+      if (booking) {
+        res.json({success: true, data: booking});
+      } else {
+        res.json({success: false});
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server Error');
+    }
+  },
 };

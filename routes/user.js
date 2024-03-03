@@ -45,6 +45,7 @@ const {removewishlist}=require('../controllers/wishlistController');
 const {creatingorder}=require('../controllers/bookandpayment.controller');
 const {bookingpayment}=require('../controllers/bookandpayment.controller');
 const {checkingalraedybooked}=require('../controllers/bookandpayment.controller');
+const {bookingdetails}=require('../controllers/bookandpayment.controller');
 
 // review and rating
 const {reviewandrating}=require('../controllers/reviewandrating');
@@ -91,6 +92,8 @@ router.delete('/removewishlist/:id', tockenCheck, removewishlist);
 router.post('/create-order', tockenCheck, creatingorder);
 router.post('/bookingpayment', tockenCheck, bookingpayment);
 router.get('/checkingalraedybooked/:id', tockenCheck, checkingalraedybooked);
+router.get('/bookingdetails', tockenCheck, bookingdetails);
+
 
 // agency review
 router.post('/reviewandrating', tockenCheck, reviewandrating);
