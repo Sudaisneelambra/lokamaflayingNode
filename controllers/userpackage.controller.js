@@ -61,4 +61,17 @@ module.exports = {
       console.log(error);
     }
   },
+  getpackage: async (req, res) => {
+    try {
+      const id =new mongoose.Types.ObjectId(req.params.id);
+      const pls = await packages.find({agencyid: id});
+      if (pls) {
+        res.json({success: true, data: pls, message: 'successfully got places'});
+      } else {
+        res.status(404).json({success: false, message: 'places getting failed'});
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };

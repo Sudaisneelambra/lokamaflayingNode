@@ -26,15 +26,18 @@ const {username}=require('../controllers/userprofile.controller');
 // package
 const {getpackages}=require('../controllers/userpackage.controller');
 const {getsinglepackage}=require('../controllers/userpackage.controller');
-
+const {getpackage}=require('../controllers/userpackage.controller');
 
 // places
 const {getplaces}=require('../controllers/userplace.controller');
 const {getsingleplace}=require('../controllers/userplace.controller');
+const {getplace}=require('../controllers/userplace.controller');
 
 
 // agency
 const {getagencies}=require('../controllers/useragency.controller');
+const {getingsingleagency}=require('../controllers/useragency.controller');
+
 
 // wishlist
 const {addtowishlist}=require('../controllers/wishlistController');
@@ -73,15 +76,17 @@ router.get('/username', tockenCheck, username);
 // package
 router.get('/getpackages', tockenCheck, getpackages);
 router.get('/getsinglepackage/:id', tockenCheck, getsinglepackage);
+router.get('/getpackage/:id', tockenCheck, getpackage);
 
 
 // places
 router.get('/getplaces', tockenCheck, getplaces);
 router.get('/getsingleplace/:id', tockenCheck, getsingleplace);
-
+router.get('/getplace/:id', tockenCheck, getplace);
 
 // agencies
 router.get('/getagencies', tockenCheck, getagencies);
+router.get('/getingsingleagency/:id', tockenCheck, getingsingleagency);
 
 // wishlist
 router.post('/addtowishlist', tockenCheck, addtowishlist);

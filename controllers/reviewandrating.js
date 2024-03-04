@@ -25,13 +25,8 @@ module.exports={
   },
   gettingpagereview: async (req, res) =>{
     try {
-      const id =new mongoose.Types.ObjectId(req.tokens.id);
-
       const rev = await review.aggregate(
           [
-            {$match:
-                {userId: id},
-            },
             {$lookup:
                 {
                   from: 'usersignups',
