@@ -16,6 +16,8 @@ const {agencyblock}=require('../controllers/adminagencylist.controller');
 const {agencyunblock}=require('../controllers/adminagencylist.controller');
 const {getagencyfulldetais}=require('../controllers/adminagencylist.controller');
 
+// booking
+const {getallbooking} =require('../controllers/adminbooking.controller');
 
 // package
 const {gettingpackages} =require('../controllers/adminpackage.controller');
@@ -55,6 +57,10 @@ router.get('/gettingallplaces', tockenCheck, gettingallplaces);
 
 // guides
 router.get('/gettingguides', tockenCheck, gettingguides);
+
+// booking
+router.get('/getallbooking', tockenCheck, getallbooking);
+
 
 router.get('/requests', tockenCheck, requests);
 router.post('/approve', tockenCheck, approve);

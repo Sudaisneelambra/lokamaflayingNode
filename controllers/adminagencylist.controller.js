@@ -115,8 +115,7 @@ module.exports = {
   getagencyfulldetais: async (req, res) =>{
     try {
       const id= new mongoose.Types.ObjectId(req.params.id);
-      const user = await signupuser.findOne({_id: id});
-      const agency = await profile.findOne({userId: user._id});
+      const agency = await profile.findOne({userId: id});
       res.json({agency});
     } catch (err) {
       res.json(`error occured ${err}`);
