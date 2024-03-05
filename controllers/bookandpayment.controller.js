@@ -99,18 +99,22 @@ module.exports={
     try {
       const userid= new mongoose.Types.ObjectId(req.tokens.id);
       const prof = await profile.findOne({userId: userid});
-      const booking = await bookingpayment.aggregate([
-        {
-          $match: {agencyid: prof._id},
-        },
-        {
-          $lookup: {from: 'usersignups', localField: 'userid', foreignField: '_id', as: 'userdetails'},
-        },
-        {
-          $lookup: {from: 'packages', localField: 'packageid', foreignField: '_id', as: 'packagedetails'},
-        }]);
-      if (booking) {
-        res.json({success: true, data: booking});
+      if (prof) {
+        const booking = await bookingpayment.aggregate([
+          {
+            $match: {agencyid: prof._id},
+          },
+          {
+            $lookup: {from: 'usersignups', localField: 'userid', foreignField: '_id', as: 'userdetails'},
+          },
+          {
+            $lookup: {from: 'packages', localField: 'packageid', foreignField: '_id', as: 'packagedetails'},
+          }]);
+        if (booking) {
+          res.json({success: true, data: booking});
+        } else {
+          res.json({success: false});
+        }
       } else {
         res.json({success: false});
       }

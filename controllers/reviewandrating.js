@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const review = require('../models/sitereview');
-const profile = require('../models/placeadd');
+const profile = require('../models/profileadd');
 const agencyreview = require('../models/agencyreview');
 
 module.exports={
@@ -143,27 +143,30 @@ module.exports={
     try {
       const id = new mongoose.Types.ObjectId(req.tokens.id);
       const prof = await profile.findOne({userId: id});
-      console.log(prof);
-      const rev = await agencyreview.aggregate(
-          [
-            {
-              $match: {
-                agencyid: prof._id,
-              },
-            },
-            {$lookup:
-                {
-                  from: 'usersignups',
-                  localField: 'userId',
-                  foreignField: '_id',
-                  as: 'userdetails',
+      if (prof) {
+        const rev = await agencyreview.aggregate(
+            [
+              {
+                $match: {
+                  agencyid: prof._id,
                 },
-            },
-          ]);
+              },
+              {$lookup:
+                  {
+                    from: 'usersignups',
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'userdetails',
+                  },
+              },
+            ]);
 
-      console.log(rev);
-      if (rev) {
-        res.json({success: true, message: 'review getted successfully', data: rev});
+        console.log(rev);
+        if (rev) {
+          res.json({success: true, message: 'review getted successfully', data: rev});
+        } else {
+          res.json({success: false, message: 'review getting failed'});
+        }
       } else {
         res.json({success: false, message: 'review getting failed'});
       }
