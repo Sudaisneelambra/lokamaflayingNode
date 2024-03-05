@@ -34,6 +34,10 @@ const {gettingguides} =require('../controllers/adminguides.controller');
 const {requests}=require('../controllers/requests.controller');
 const {approve}=require('../controllers/requests.controller');
 
+// review agency
+const {getallagencyreview}=require('../controllers/reviewandrating');
+
+
 // agenncy
 router.get('/getagencylist', tockenCheck, getagencylist);
 router.get('/getblockedagencylist', tockenCheck, getblockedagencylist);
@@ -61,6 +65,8 @@ router.get('/gettingguides', tockenCheck, gettingguides);
 // booking
 router.get('/getallbooking', tockenCheck, getallbooking);
 
+// review
+router.get('/getallagencyreview', tockenCheck, getallagencyreview);
 
 router.get('/requests', tockenCheck, requests);
 router.post('/approve', tockenCheck, approve);

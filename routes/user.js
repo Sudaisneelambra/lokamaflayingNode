@@ -54,6 +54,10 @@ const {bookingdetails}=require('../controllers/bookandpayment.controller');
 const {reviewandrating}=require('../controllers/reviewandrating');
 const {gettingpagereview}=require('../controllers/reviewandrating');
 
+const {agencyreview}=require('../controllers/reviewandrating');
+const {getingagencyreview}=require('../controllers/reviewandrating');
+
+
 // userguide
 const {getguide}=require('../controllers/userguide.controller');
 
@@ -100,9 +104,13 @@ router.get('/checkingalraedybooked/:id', tockenCheck, checkingalraedybooked);
 router.get('/bookingdetails', tockenCheck, bookingdetails);
 
 
-// agency review
+// site review
 router.post('/reviewandrating', tockenCheck, reviewandrating);
 router.get('/gettingpagereview', tockenCheck, gettingpagereview);
+
+// agency review
+router.post('/agencyreview', tockenCheck, agencyreview);
+router.get('/getingagencyreview/:id', tockenCheck, getingagencyreview);
 
 // guid user
 router.get('/getguide', tockenCheck, getguide);

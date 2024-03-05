@@ -3,6 +3,7 @@
 const razorpay =require('../utils/rozorpay');
 const bookingpayment =require('../models/bookingpayments');
 const package =require('../models/package');
+const profile =require('../models/profileadd');
 const mongoose =require('mongoose');
 
 module.exports={
@@ -80,6 +81,30 @@ module.exports={
         },
         {
           $lookup: {from: 'agencies', localField: 'agencyid', foreignField: '_id', as: 'agencydetails'},
+        },
+        {
+          $lookup: {from: 'packages', localField: 'packageid', foreignField: '_id', as: 'packagedetails'},
+        }]);
+      if (booking) {
+        res.json({success: true, data: booking});
+      } else {
+        res.json({success: false});
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server Error');
+    }
+  },
+  getbooking: async (req, res) => {
+    try {
+      const userid= new mongoose.Types.ObjectId(req.tokens.id);
+      const prof = await profile.findOne({userId: userid});
+      const booking = await bookingpayment.aggregate([
+        {
+          $match: {agencyid: prof._id},
+        },
+        {
+          $lookup: {from: 'usersignups', localField: 'userid', foreignField: '_id', as: 'userdetails'},
         },
         {
           $lookup: {from: 'packages', localField: 'packageid', foreignField: '_id', as: 'packagedetails'},

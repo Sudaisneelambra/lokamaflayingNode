@@ -43,6 +43,12 @@ const {getsinglepackage} =require('../controllers/packagecontroller');
 const {deletepackage} =require('../controllers/packagecontroller');
 const {editpackage} =require('../controllers/packagecontroller');
 
+// booking
+const {getbooking} =require('../controllers/bookandpayment.controller');
+
+// review
+const {getreview} =require('../controllers/reviewandrating');
+
 
 // profile
 router.get('/profilenameget', tockenCheck, gettingprofilename);
@@ -65,6 +71,12 @@ router.post('/placeadd', tockenCheck, uploads.array('images', 5), already, addpl
 router.get('/getsingleplace/:id', tockenCheck, gettingsingleplace);
 router.get('/confirmation/:id', tockenCheck, conformation);
 router.delete('/deletepackageplace/:id', tockenCheck, packageplacedeleting);
+
+// booking
+router.get('/getbooking', tockenCheck, getbooking);
+
+// review
+router.get('/getreview', tockenCheck, getreview);
 
 
 // guide
