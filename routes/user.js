@@ -82,7 +82,6 @@ router.get('/getpackages', tockenCheck, getpackages);
 router.get('/getsinglepackage/:id', tockenCheck, getsinglepackage);
 router.get('/getpackage/:id', tockenCheck, getpackage);
 
-
 // places
 router.get('/getplaces', tockenCheck, getplaces);
 router.get('/getsingleplace/:id', tockenCheck, getsingleplace);
@@ -116,4 +115,3 @@ router.get('/getingagencyreview/:id', tockenCheck, getingagencyreview);
 router.get('/getguide', tockenCheck, getguide);
 
 module.exports=router;
-username

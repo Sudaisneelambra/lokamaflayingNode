@@ -133,8 +133,6 @@ module.exports = {
           .verificationChecks.create({to: `+91${phone}`, code: otp})
           .then(async (res) => {
             const hashedPassword = await bcrypt.hash(password, starRound);
-            console.log(role);
-            console.log('------------------------------');
             if (
               res &&
             res.status === 'approved' &&
