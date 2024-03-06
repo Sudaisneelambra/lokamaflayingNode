@@ -9,10 +9,6 @@ const mongoose =require('mongoose');
 module.exports={
   creatingorder: async (req, res) => {
     const {price, agencyid, packageid} =req.body;
-    console.log(price);
-    console.log(agencyid);
-    console.log(packageid);
-
 
     const options = {
       amount: price *100, // amount in the smallest currency unit
@@ -22,7 +18,6 @@ module.exports={
 
     try {
       const order = await razorpay.orders.create(options);
-      console.log(order);
       res.json(order);
     } catch (error) {
       console.error(error);

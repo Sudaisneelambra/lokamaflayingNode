@@ -13,7 +13,6 @@ module.exports = {
           },
         },
       ]);
-      console.log(pkg);
       if (pkg) {
         res.json({
           success: true,

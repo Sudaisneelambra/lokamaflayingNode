@@ -75,11 +75,14 @@ module.exports = {
             res.json({
               message: 'email already used',
             });
-          } else if (phonenumberexist) {
-            res.json({
-              message: 'phonenumber already used',
-            });
-          } else {
+            // eslint-disable-next-line brace-style
+          }
+          // else if (phonenumberexist) {
+          //   res.json({
+          //     message: 'phonenumber already used',
+          //   });
+          // }
+          else {
             const otp = otpgenerator.generate(6, {
               digits: true,
               lowerCaseAlphabets: false,
@@ -119,7 +122,7 @@ module.exports = {
     }
   },
 
-  postOtpverification: async (req, res) => {
+  postOtpverification: async (req, response) => {
     try {
       const {otp, username, email, password, phoneNumber, role} = req.body;
       const phone = +phoneNumber;
@@ -127,90 +130,97 @@ module.exports = {
       // verification check
       const verificationCheck = await client.verify.v2
           .services(serviceSid)
-          .verificationChecks.create({to: `+91${phone}`, code: otp});
+          .verificationChecks.create({to: `+91${phone}`, code: otp})
+          .then(async (res) => {
+            const hashedPassword = await bcrypt.hash(password, starRound);
+            console.log(role);
+            console.log('------------------------------');
+            if (
+              res &&
+            res.status === 'approved' &&
+            role.user
+            ) {
+              const user = new signupuser({
+                username,
+                email,
+                password: hashedPassword,
+                isAdmin: false,
+                phoneNumber,
+                verified: true,
+                role: {
+                  agency: false,
+                  user: true,
+                },
+              });
+
+              const mailOnly = await user.save();
+              const token = jwt.sign(
+                  {
+                    id: mailOnly._id,
+                    username: mailOnly.username,
+                  },
+                  secretKey,
+                  {
+                    expiresIn: '1h',
+                  },
+              );
+
+              response.json({
+                success: true,
+                user: true,
+                message: 'successfully verified user',
+                token,
+                type: 'user',
+              });
+            } else if (
+              res &&
+            res.status === 'approved' &&
+            role.agency
+            ) {
+              const agency = new signupuser({
+                username,
+                email,
+                password: hashedPassword,
+                isAdmin: false,
+                phoneNumber,
+                verified: false,
+                role: {
+                  agency: true,
+                  user: false,
+                },
+              });
+
+              await agency.save();
+
+              // if agency ,send mail to agency
+              emails(
+                  email,
+                  'agency verification mail',
+                  `dear costomer ,verification message send to the admin,you can go 
+                  to the agency dashboard after the verification of admin, 
+                  please wait for admin's verification`,
+              );
+
+              response.json({
+                success: true,
+                agency: true,
+                message: 'agency registered,wait the admin verification',
+              });
+            } else {
+              response.json({
+                success: false,
+                message: 'otp verification failed not approved',
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
       // if user or agency check
-
-      const hashedPassword = await bcrypt.hash(password, starRound);
-
-      if (
-        verificationCheck &&
-        verificationCheck.status === 'approved' &&
-        role.user
-      ) {
-        const user = new signupuser({
-          username,
-          email,
-          password: hashedPassword,
-          isAdmin: false,
-          phoneNumber,
-          verified: true,
-          role: {
-            agency: false,
-            user: true,
-          },
-        });
-
-        await user.save();
-        const token = jwt.sign(
-            {
-              id: mailOnly.id,
-              username: mailOnly.username,
-            },
-            secretKey,
-            {
-              expiresIn: '1h',
-            },
-        );
-
-        res.json({
-          success: true,
-          user: true,
-          message: 'successfully verified user',
-          token,
-        });
-      } else if (
-        verificationCheck &&
-        verificationCheck.status === 'approved' &&
-        role.agency
-      ) {
-        const agency = new signupuser({
-          username,
-          email,
-          password: hashedPassword,
-          isAdmin: false,
-          phoneNumber,
-          verified: false,
-          role: {
-            agency: true,
-            user: false,
-          },
-        });
-
-        await agency.save();
-
-        // if agency ,send mail to agency
-        emails(
-            email,
-            'agency verification mail',
-            `dear costomer ,verification message send to the admin,you can go 
-            to the agency dashboard after the verification of admin, 
-            please wait for admin's verification`,
-        );
-
-        res.json({
-          success: true,
-          agency: true,
-          message: 'agency registered,wait the admin verification',
-        });
-      } else {
-        res.json({
-          success: false,
-          message: 'otp verification failed',
-        });
-      }
     } catch (err) {
-      res.json({
+      console.log(err);
+      response.json({
         message: 'verification failed',
       });
     }
@@ -218,12 +228,10 @@ module.exports = {
   postLogin: async (req, res) => {
     try {
       const {mail, pass} = req.body;
-      console.log(req.body);
       const mailOnly = await signupuser.findOne({
         email: mail,
       });
       if (mailOnly) {
-        console.log(mailOnly);
         const sin = mailOnly._id;
         const passMatch = await bcrypt.compare(pass, mailOnly.password);
 

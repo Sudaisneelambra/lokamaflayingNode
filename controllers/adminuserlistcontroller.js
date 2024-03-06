@@ -17,7 +17,6 @@ module.exports ={
   getblockeduserlist: async (req, res)=>{
     try {
       const userlist = await signupuser.find({'role.user': true, 'isAdmin': {$ne: true}, 'blockstatus': {$ne: false}});
-      console.log(userlist);
       res.json({userlist});
     } catch (error) {
       console.log(error);
@@ -35,11 +34,11 @@ module.exports ={
           `Dear customer, the Lokahama admin has blocked your access to our website due to some illegal issues. We apologize for the inconvenience.`,
       )
           .then(async () => {
+            // eslint-disable-next-line no-unused-vars
             const updated = await signupuser.updateOne(
                 {_id: new mongoose.Types.ObjectId(id)},
                 {$set: {blockstatus: true}},
             );
-            console.log(updated);
             res.json({success: true, message: 'succesfully blocked'});
           })
           .catch((error) => {
@@ -62,11 +61,11 @@ module.exports ={
           `Dear customer, the Lokahama admin has unblocked .`,
       )
           .then(async () => {
+            // eslint-disable-next-line no-unused-vars
             const updated = await signupuser.updateOne(
                 {_id: new mongoose.Types.ObjectId(id)},
                 {$set: {blockstatus: false}},
             );
-            console.log(updated);
             res.json({success: true, message: 'succesfully unblocked'});
           })
           .catch((error) => {
