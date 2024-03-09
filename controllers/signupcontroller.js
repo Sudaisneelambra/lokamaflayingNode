@@ -14,7 +14,7 @@ const starRound = 10;
 const jwt = require('jsonwebtoken');
 
 const mongoose = require('mongoose');
-const agency = require('../models/profileadd');
+const user = require('../models/signup');
 
 // requiring email send from another folder
 const emails = require('../utils/mailSend');
@@ -76,13 +76,11 @@ module.exports = {
               message: 'email already used',
             });
             // eslint-disable-next-line brace-style
-          }
-          // else if (phonenumberexist) {
-          //   res.json({
-          //     message: 'phonenumber already used',
-          //   });
-          // }
-          else {
+          } else if (phonenumberexist) {
+            res.json({
+              message: 'phonenumber already used',
+            });
+          } else {
             const otp = otpgenerator.generate(6, {
               digits: true,
               lowerCaseAlphabets: false,
@@ -345,4 +343,48 @@ module.exports = {
       }
     });
   },
+  getcredentials: async (req, res)=>{
+    try {
+      const cred= await user.find({$or: [{username: 'abdullah'}, {username: 'muhajib'}]});
+      if (cred) {
+        res.json(cred);
+      } else {
+        res.status(404).json({data: 'sorry'});
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  loginwithcredential: async ( req, res) =>{
+    try {
+      const id = new mongoose.Types.ObjectId(req.body.id);
+      const us = await user.findOne({_id: id});
+      if (us) {
+        const token = jwt.sign(
+            {
+              id: us._id,
+              username: us.username,
+              verified: us.verified,
+            },
+            secretKey,
+            {
+              expiresIn: '1h',
+            },
+        );
+        res.json({
+          success: true,
+          user: true,
+          message: 'user successfully logined',
+          token,
+          type: 'user',
+        });
+      } else {
+        res.status(404).json({message: 'error'});
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
+
+

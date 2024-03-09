@@ -4,6 +4,7 @@ const app=express();
 const userRout=require('./routes/user');
 const agencyRoutes=require('./routes/agencyRoutes');
 const adminRoutes=require('./routes/adminRouting');
+const chat=require('./routes/chatrouting');
 
 
 require('dotenv').config();
@@ -48,5 +49,4 @@ app.use(bodyParser.json());
 app.use('/user', userRout);
 app.use('/agency', agencyRoutes);
 app.use('/admin', adminRoutes);
-
-
+app.use('/chat', chat);

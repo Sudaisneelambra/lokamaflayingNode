@@ -15,6 +15,8 @@ const {postSignup}=require('../controllers/signupcontroller');
 const {postOtpverification} = require('../controllers/signupcontroller');
 const {postLogin}=require('../controllers/signupcontroller');
 const {logout}=require('../controllers/signupcontroller');
+const {getcredentials}=require('../controllers/signupcontroller');
+const {loginwithcredential}=require('../controllers/signupcontroller');
 
 
 // profile
@@ -113,5 +115,10 @@ router.get('/getingagencyreview/:id', tockenCheck, getingagencyreview);
 
 // guid user
 router.get('/getguide', tockenCheck, getguide);
+
+// get credentrials
+router.get('/getcredentials', getcredentials);
+router.post('/loginwithcredential', loginwithcredential);
+
 
 module.exports=router;
