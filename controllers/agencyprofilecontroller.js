@@ -76,8 +76,6 @@ module.exports={
   profileckeck: async (req, res) =>{
     const id = req.tokens.id;
     const prof= await profile.findOne({userId: new mongoose.Types.ObjectId(id)});
-
-    console.log(prof);
     if (prof) {
       res.json({profileadd: true});
     } else {

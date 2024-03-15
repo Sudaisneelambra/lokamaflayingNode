@@ -10,8 +10,6 @@ module.exports={
     await save.save();
   },
   usermessages: async (req, res) => {
-    console.log(req.tokens);
-    console.log('manyu');
     try {
       const messages = await chats.find( {
         $or: [
@@ -26,8 +24,6 @@ module.exports={
     }
   },
   allusermessages: async (req, res) => {
-    console.log(req.tokens);
-    console.log('masooooru');
     try {
       const messages = await chats.find({});
       console.log(messages);

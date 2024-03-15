@@ -34,6 +34,7 @@ mongoose.connect(DB_URL).then((res)=>{
   });
 })
     .catch((err)=>{
+      console.log(err);
       console.log('server connection failed');
     });
 
