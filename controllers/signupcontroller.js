@@ -263,7 +263,7 @@ module.exports = {
                   id: mailOnly._id,
                   username: mailOnly.username,
                   verified: mailOnly.verified,
-                  type: 'admin',
+                  type: 'user',
                 },
                 secretKey,
                 {
