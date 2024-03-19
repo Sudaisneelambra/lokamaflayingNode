@@ -255,7 +255,6 @@ module.exports = {
               admin: true,
               message: 'admin successfully logined',
               token,
-              type: 'admin',
             });
           } else if (passMatch && mailOnly.role.user && !mailOnly.blockstatus) {
             const token = jwt.sign(
@@ -275,7 +274,6 @@ module.exports = {
               user: true,
               message: 'user successfully logined',
               token,
-              type: 'user',
             });
           } else if (passMatch && mailOnly.role.user && mailOnly.blockstatus) {
             res.json({
@@ -320,7 +318,6 @@ module.exports = {
                 message: 'registered agency',
                 token,
                 profileadd: true,
-                type: 'agency',
               });
             } else {
               res.json({
@@ -329,7 +326,6 @@ module.exports = {
                 message: 'registered agency',
                 token,
                 profileadd: false,
-                type: 'agency',
               });
             }
           } else if (mailOnly.blockstatus) {
@@ -390,6 +386,7 @@ module.exports = {
               id: us._id,
               username: us.username,
               verified: us.verified,
+              type: 'user',
             },
             secretKey,
             {
