@@ -128,8 +128,6 @@ module.exports={
                 },
             },
           ]);
-
-      console.log(rev);
       if (rev) {
         res.json({success: true, message: 'review getted successfully', data: rev});
       } else {

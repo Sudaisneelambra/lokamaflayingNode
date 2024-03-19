@@ -154,6 +154,7 @@ module.exports = {
                   {
                     id: mailOnly._id,
                     username: mailOnly.username,
+                    type: 'user',
                   },
                   secretKey,
                   {
@@ -236,19 +237,19 @@ module.exports = {
             message: 'password incorrect',
           });
         } else {
-          const token = jwt.sign(
-              {
-                id: mailOnly._id,
-                username: mailOnly.username,
-                verified: mailOnly.verified,
-              },
-              secretKey,
-              {
-                expiresIn: '1h',
-              },
-          );
-
           if (passMatch && mailOnly.isAdmin) {
+            const token = jwt.sign(
+                {
+                  id: mailOnly._id,
+                  username: mailOnly.username,
+                  verified: mailOnly.verified,
+                  type: 'admin',
+                },
+                secretKey,
+                {
+                  expiresIn: '1h',
+                },
+            );
             res.json({
               success: true,
               admin: true,
@@ -257,6 +258,18 @@ module.exports = {
               type: 'admin',
             });
           } else if (passMatch && mailOnly.role.user && !mailOnly.blockstatus) {
+            const token = jwt.sign(
+                {
+                  id: mailOnly._id,
+                  username: mailOnly.username,
+                  verified: mailOnly.verified,
+                  type: 'admin',
+                },
+                secretKey,
+                {
+                  expiresIn: '1h',
+                },
+            );
             res.json({
               success: true,
               user: true,
@@ -276,6 +289,18 @@ module.exports = {
             mailOnly.verified &&
             !mailOnly.blockstatus
           ) {
+            const token = jwt.sign(
+                {
+                  id: mailOnly._id,
+                  username: mailOnly.username,
+                  verified: mailOnly.verified,
+                  type: 'agency',
+                },
+                secretKey,
+                {
+                  expiresIn: '1h',
+                },
+            );
             const already = await signupuser.aggregate([
               {$match: {_id: new mongoose.Types.ObjectId(sin)}},
               {

@@ -8,7 +8,6 @@ const checkTocken=(req, res, next)=>{
     if (err) {
       res.json({message: `verification fialed due to  ${err.message}`, expiry: err.message});
     } else {
-      // Token is verified successfully
       const expirationTime = decoded.exp;
       const currentTime = Math.floor(Date.now() / 1000);
 

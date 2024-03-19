@@ -26,7 +26,6 @@ module.exports={
   allusermessages: async (req, res) => {
     try {
       const messages = await chats.find({});
-      console.log(messages);
       res.json(messages);
     } catch (error) {
       console.error('Error fetching messages:', error);
